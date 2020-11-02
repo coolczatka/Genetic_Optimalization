@@ -1,6 +1,11 @@
+from Config import Config
+import SelectionStrategy
+from AckleyOptimalizer import AckleyOptimalizer
 
-# Press the green button in the gutter to run the script.
+def main():
+    config = Config(1000)
+    ackleyOptimalization = AckleyOptimalizer(config)
+    ackleyOptimalization.run()
+
 if __name__ == '__main__':
-    print('Hello')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
