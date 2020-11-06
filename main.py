@@ -1,9 +1,11 @@
 from Config import Config
+from Config import ChromosomeConfig
 import SelectionStrategy
 from AckleyOptimalizer import AckleyOptimalizer
 
 def main():
-    config = Config(1000)
+    chromosomeConfig = ChromosomeConfig()
+    config = Config(1000, chromosomeConfig)
     ackleyOptimalization = AckleyOptimalizer(config)
     ackleyOptimalization.run()
 
