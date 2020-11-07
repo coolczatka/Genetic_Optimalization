@@ -20,9 +20,8 @@ class BinaryHelper:
         return number
 
     @staticmethod
-    def bin_to_float(b):
-        """ Convert binary string to a float. """
-        print(int(b,2))
-        bf = int.to_bytes(int(b, 2), 8, 'big')  # 8 bytes needed for IEEE 754 binary64.
-        print(bf)
-        return struct.unpack('>d', bf)[0]
+    def flipByte(byte):
+        if(byte == '1'):
+            return '0'
+        elif (byte == '0'):
+            return '1'
