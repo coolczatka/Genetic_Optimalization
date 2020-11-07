@@ -39,20 +39,22 @@ class Chromosome():
         newChromosomeString = self.chromosomeString
         if self.config.mk == 1:
             rand = random()
-            if rand >= self.config.mp:
+            if rand <= self.config.mp:
                 newChromosomeString[-1] = BinaryHelper.flipByte(newChromosomeString[-1])
         #jednopunktowa
         elif self.config.mk == 2:
-            position = randint(0, len(self.chromosomeString)-1)
-            newChromosomeString[position] = BinaryHelper.flipByte(newChromosomeString[position])
+            if(random() <= self.config.mp):
+                position = randint(0, len(self.chromosomeString)-1)
+                newChromosomeString[position] = BinaryHelper.flipByte(newChromosomeString[position])
         #dwupunktowa
         elif self.config.mk == 3:
-            position1 = randint(0, len(newChromosomeString) - 1)
-            position2 = randint(0, len(newChromosomeString) - 1)
-            while position1 == position2:
+            if(random() <= self.config.mp):
+                position1 = randint(0, len(newChromosomeString) - 1)
                 position2 = randint(0, len(newChromosomeString) - 1)
-            newChromosomeString[position1] = BinaryHelper.flipByte(newChromosomeString[position1])
-            newChromosomeString[position2] = BinaryHelper.flipByte(newChromosomeString[position2])
+                while position1 == position2:
+                    position2 = randint(0, len(newChromosomeString) - 1)
+                newChromosomeString[position1] = BinaryHelper.flipByte(newChromosomeString[position1])
+                newChromosomeString[position2] = BinaryHelper.flipByte(newChromosomeString[position2])
         newChromosome = Chromosome.createFromChromosomeString(newChromosomeString, self.config)
         return newChromosome
 
