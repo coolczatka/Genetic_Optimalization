@@ -23,8 +23,7 @@ class ClassicalChromosome(AbstractChromosome):
         return self.a + int(self.bitString, 2) * (self.b - self.a) / ((2**self.bitlength) - 1)
 
     def cross(self, chromB):
-        temp = self
-        a = temp.crossW(chromB)
+        a = self.crossW(chromB)
         b = chromB.crossW(self)
         return a, b
 
@@ -34,27 +33,34 @@ class ClassicalChromosome(AbstractChromosome):
         # 2 - dwupunktowe settings {'crosspoints': [3, 5]}
         # 3 - jednorodna
         if self.config.ck == 1:
-            point = randint(1, len(self.bitString) - 1)
-            newChromosomeString = self.bitString[:point] + chromB.bitString[point:]
+            if(random() <= self.config.cp):
+                point = randint(1, len(self.bitString) - 1)
+                newChromosomeString = self.bitString[:point] + chromB.bitString[point:]
         elif self.config.ck == 2:
-            point1 = randint(1, len(self.bitString) - 1)
-            point2 = randint(1, len(self.bitString) - 1)
-            while point2 == point1:
+            if(random() <= self.config.cp):
+                point1 = randint(1, len(self.bitString) - 1)
                 point2 = randint(1, len(self.bitString) - 1)
-            if(point2 < point1):
-                temp = point2
-                point2 = point1
-                point1 = temp
-            newChromosomeString = self.bitString[:point1]
-            newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
-            newChromosomeString = newChromosomeString + self.bitString[point2:]
+                while point2 == point1:
+                    point2 = randint(1, len(self.bitString) - 1)
+                if(point2 < point1):
+                    temp = point2
+                    point2 = point1
+                    point1 = temp
+                newChromosomeString = self.bitString[:point1]
+                newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
+                newChromosomeString = newChromosomeString + self.bitString[point2:]
         elif self.config.ck == 3:
-            for i in range(len(self.bitString)):
-                if(i % 2 == 0):
-                    newChromosomeString = newChromosomeString + self.bitString[i]
-                else:
-                    newChromosomeString = newChromosomeString + chromB.bitString[i]
-        return newChromosomeString
+            if random() <= self.config.cp:
+                for i in range(len(self.bitString)):
+                    if(i % 2 == 0):
+                        newChromosomeString = newChromosomeString + self.bitString[i]
+                    else:
+                        newChromosomeString = newChromosomeString + chromB.bitString[i]
+        else:
+            return self
+        newChromosome = ClassicalChromosome.createFromChromosomeString(newChromosomeString, (self.a, self.b),
+                                                                       self.precission)
+        return newChromosome
 
 
     def mutate(self):
@@ -85,6 +91,8 @@ class ClassicalChromosome(AbstractChromosome):
                 newChromosomeString2 += newChromosomeString[position1+1:position2] + BinaryHelper.flipByte(newChromosomeString[position2])
                 newChromosomeString2 += newChromosomeString[position2+1:]
                 newChromosomeString = newChromosomeString2
+        else:
+            return self
         newChromosome = ClassicalChromosome.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precission)
         return newChromosome
 
@@ -93,6 +101,27 @@ class ClassicalChromosome(AbstractChromosome):
         cc = ClassicalChromosome(range, precission)
         cc.bitString = string
         return cc
+
+    def invert(self):
+        newChromosomeString = self.bitString
+        if(random() <= self.config.ip):
+            position1 = randint(0, len(newChromosomeString) - 1)
+            position2 = randint(0, len(newChromosomeString) - 1)
+            while position1 == position2:
+                position2 = randint(0, len(newChromosomeString) - 1)
+            if (position1 > position2):
+                temp = position1
+                position1 = position2
+                position2 = temp
+            newChromosomeString2 = newChromosomeString[:position1]
+            newChromosomeString2 += newChromosomeString[position2:position1:-1]
+            newChromosomeString2 += newChromosomeString[position2:]
+            newChromosomeString = newChromosomeString2
+        newChromosome = ClassicalChromosome.createFromChromosomeString(newChromosomeString, (self.a, self.b),
+                                                                       self.precission)
+        return newChromosome
+    def __str__(self):
+        return self.bitString
 
 
 

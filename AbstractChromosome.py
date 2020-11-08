@@ -6,6 +6,9 @@ class AbstractChromosome:
     def mutate(self):
         raise NotImplementedError('NI')
 
+    def invert(self):
+        raise NotImplementedError('NI')
+
     #ChromosomeConfig
     def setConfig(self, config):
         self.config = config

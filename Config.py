@@ -2,13 +2,14 @@
 
 class Config:
     #kind 0 - minimalization 1 - maximalization
-    def __init__(self, generations, chromosomeConfig, kind = 0, searchRange = (-30, 30), populationSize = 500, selection = 0):
+    def __init__(self, generations, chromosomeConfig, kind = 0, searchRange = (-30, 30), populationSize = 500, selection = 0, precission = 6):
         self.generations = generations
         self.kind = kind
         self.range = searchRange
         self.populationSize = populationSize
         self.selection = selection
         self.chConfig = chromosomeConfig
+        self.precission = precission
 
 
 class ChromosomeConfig:
@@ -16,7 +17,7 @@ class ChromosomeConfig:
     #mp = prawdopodobienstwo mutacji
     #ck = rodzaj krzyzowania
     #cp = prawdopodobienstwo krzyzowania
-    def __init__(self, mk = 0, mp = 0.1, ck = 0, cp = .9):
+    def __init__(self, mk = 0, mp = 0.1, ck = 0, cp = .9, ip = .7):
         # 0 - brak
         # 1 - Brzegowa
         # 2 - Jednopunktowa settings {'mutation_points': [5]}
@@ -29,6 +30,8 @@ class ChromosomeConfig:
         # 3 - jednorodna
         self.ck = ck
         self.cp = cp
+
+        self.ip = ip
 
         #self.validateSettings()
 
