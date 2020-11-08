@@ -1,15 +1,15 @@
 from random import randint, random
 from BinaryHelper import BinaryHelper
+from AbstractChromosome import AbstractChromosome
 
-class Chromosome():
+class Chromosome(AbstractChromosome):
 
-    #ChromosomeConfig
-    def setConfig(self, config):
-        self.config = config
+    def __str__(self):
+        return f'<{self.x}, {self.y}> - {self.chromosomeString}'
 
     def __init__(self, length = 0):
-        self.x = randint(-1*2**(length), 2**length-1)
-        self.y = randint(-1*2**(length), 2**length-1)
+        self.x = random()*(2**(length+1))-(2**length)
+        self.y = random()*(2**(length+1))-(2**length)
         self.binaryX = BinaryHelper.binary(self.x)
         self.binaryY = BinaryHelper.binary(self.y)
         self.chromosomeString = self.binaryX + self.binaryY

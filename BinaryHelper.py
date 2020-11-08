@@ -1,6 +1,5 @@
 import struct
-import numpy as np
-from codecs import decode
+
 class BinaryHelper:
     @staticmethod
     def binary(num):
@@ -8,7 +7,7 @@ class BinaryHelper:
 
     @staticmethod
     def floatVal(binaryString):
-        sign = 1 if binaryString[0] == '0' else -1;
+        sign = 1 if binaryString[0] == '0' else -1
         rest = binaryString[1:]
         exponent = int(rest[0:8], 2) - 127
         bias = rest[8:]
