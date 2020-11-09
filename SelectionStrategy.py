@@ -9,9 +9,9 @@ class SelectionStrategy:
     def best(self, percentOfBest):
         pass
 
-    def tournament(self, amountOfTournaments, amountOfChampions):
+    def tournament(self, amountOfTournaments):
         n = amountOfTournaments
-        k = amountOfChampions
+
         pass
 
     def ranking(self): # nie wiem jakie parametry

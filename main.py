@@ -16,7 +16,8 @@ def main():
     # c1.setConfig(config)
     # c2 = ClassicalChromosome((-10,10), 6)
     # c2.setConfig(config)
-    #
+
+
     # c1.initializeBitString()
     # c2.initializeBitString()
     # print(c1)
