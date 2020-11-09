@@ -2,6 +2,9 @@ import math
 import random
 import numpy as np
 from SelectionStrategy import SelectionStrategy
+from ClassicalChromosome import ClassicalChromosome
+from XmlFile import XmlFile
+
 class AckleyOptimalizer():
     def __init__(self, config, a = 20, b = 0.2, c = 2*math.pi):
         self.config = config
@@ -9,7 +12,13 @@ class AckleyOptimalizer():
         self.parameterB = b
         self.parameterC = c
 
-        self.population = [[self.getRandomBinary(), self.getRandomBinary()] for i in range(self.config.populationSize)]
+        self.population = []
+        for i in range(self.config.populationSize):
+            x = ClassicalChromosome(self.config.range, self.config.precission)
+            x.initializeBitString()
+            y = ClassicalChromosome(self.config.range, self.config.precission)
+            y.initializeBitString()
+            self.population.append([x,y])
 
     def getRandomBinary(self):
         return bin((1 << self.bitlength) - 1 & random.randint(self.config.range[0], self.config.range[1]))
@@ -32,7 +41,14 @@ class AckleyOptimalizer():
             newX = selectionStrategy.best(self.config)
 
     def run(self):
-        pass
+        xmlFile = XmlFile()
+        parameters = {'a': self.parameterA, 'b': self.parameterB, 'c': self.parameterC}
+        xmlFile.xmlStart(self.config, parameters)
+        xmlFile.openGenerationsTag()
+        print(self.population)
+        xmlFile.addGeneration(self.population)
+        xmlFile.closeGenerationsTag()
+        xmlFile.xmlEnd()
 
 
 
