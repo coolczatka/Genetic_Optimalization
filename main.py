@@ -4,7 +4,7 @@ import SelectionStrategy
 from AckleyOptimalizer import AckleyOptimalizer
 from BinaryHelper import BinaryHelper
 from Chromosome import Chromosome
-from ClassicalGene import ClassicalChromosome
+from ClassicalGene import ClassicalGene
 
 def main():
     chromosomeConf = ChromosomeConfig(mk=1, ck=1)
@@ -12,9 +12,9 @@ def main():
     ao = AckleyOptimalizer(config)
     ao.run()
     # config = ChromosomeConfig(mp=1, cp=1, ip=1, mk=3, ck=3)
-    # c1 = ClassicalChromosome((-10,10), 6)
+    # c1 = ClassicalGene((-10,10), 6)
     # c1.setConfig(config)
-    # c2 = ClassicalChromosome((-10,10), 6)
+    # c2 = ClassicalGene((-10,10), 6)
     # c2.setConfig(config)
 
 

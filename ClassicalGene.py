@@ -4,7 +4,7 @@ from AbstractChromosome import AbstractChromosome
 from BinaryHelper import BinaryHelper
 
 
-class ClassicalChromosome(AbstractChromosome):
+class ClassicalGene(AbstractChromosome):
     def __init__(self, range, precision):
         #a,b - przedział
         self.b = range[1]
@@ -59,8 +59,8 @@ class ClassicalChromosome(AbstractChromosome):
                         newChromosomeString = newChromosomeString + chromB.bitString[i]
         else:
             return self
-        newChromosome = ClassicalChromosome.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                                       self.precision)
+        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
+                                                                 self.precision)
         return newChromosome
 
 
@@ -94,12 +94,12 @@ class ClassicalChromosome(AbstractChromosome):
                 newChromosomeString = newChromosomeString2
         else:
             return self
-        newChromosome = ClassicalChromosome.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision)
+        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision)
         return newChromosome
 
     @staticmethod
     def createFromChromosomeString(string, range, precision):
-        cc = ClassicalChromosome(range, precision)
+        cc = ClassicalGene(range, precision)
         cc.bitString = string
         return cc
 
@@ -118,9 +118,10 @@ class ClassicalChromosome(AbstractChromosome):
             newChromosomeString2 += newChromosomeString[position2:position1:-1]
             newChromosomeString2 += newChromosomeString[position2:]
             newChromosomeString = newChromosomeString2
-        newChromosome = ClassicalChromosome.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                                       self.precision)
+        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
+                                                                 self.precision)
         return newChromosome
+
     def __str__(self):
         return self.bitString
 

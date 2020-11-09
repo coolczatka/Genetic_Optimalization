@@ -2,7 +2,7 @@ import math
 import random
 import numpy as np
 from SelectionStrategy import SelectionStrategy
-from ClassicalGene import ClassicalChromosome
+from ClassicalGene import ClassicalGene
 from Specimen import Specimen
 from XmlFile import XmlFile
 
@@ -15,14 +15,13 @@ class AckleyOptimalizer():
 
         self.population = []
         for i in range(self.config.populationSize):
-            x = ClassicalChromosome(self.config.range, self.config.precision)
+            x = ClassicalGene(self.config.range, self.config.precision)
             x.initializeBitString()
-            y = ClassicalChromosome(self.config.range, self.config.precision)
+            y = ClassicalGene(self.config.range, self.config.precision)
             y.initializeBitString()
+
             genome = [x, y]
             gen_values = [x.getValueFromBitString(), y.getValueFromBitString()]
-            print(sum(np.array(gen_values)**2))
-            print(gen_values, genome)
             s = Specimen(genome, self.ackley(gen_values))
             self.population.append(s)
 
@@ -51,7 +50,7 @@ class AckleyOptimalizer():
         parameters = {'a': self.parameterA, 'b': self.parameterB, 'c': self.parameterC}
         xmlFile.xmlStart(self.config, parameters)
         xmlFile.openGenerationsTag()
-        print(self.population)
+        #print(self.population)
         xmlFile.addGeneration([(i.genome[0], i.genome[1]) for i in self.population])
         xmlFile.closeGenerationsTag()
         xmlFile.xmlEnd()

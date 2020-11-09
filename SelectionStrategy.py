@@ -1,3 +1,5 @@
+import math
+
 
 class SelectionStrategy:
 
@@ -6,9 +8,13 @@ class SelectionStrategy:
 
     @staticmethod
     def best(population, percentOfBest):
-        i = (len(population)*percentOfBest)/100
-        print(i)
         specimens_to_cross = []
+        index = math.ceil((len(population)*percentOfBest)/100)
+        s = sorted(population, key=lambda specimen: specimen.fitness)
+
+        for i in range(int(index)):
+            specimens_to_cross.append(s[i])
+
         return specimens_to_cross
 
 

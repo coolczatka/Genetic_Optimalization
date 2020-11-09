@@ -2,14 +2,18 @@
 
 class Config:
     #kind 0 - minimalization 1 - maximalization
-    def __init__(self, generations, chromosomeConfig, kind = 0, searchRange = (-30, 30), populationSize = 500, selection = 0, precision = 6):
+    def __init__(self, generations, chromosomeConfig, kind=0, searchRange=(-30, 30), populationSize=500, selection=0, precision=6,
+                  winnersPercent=10, elitePercent=10):
         self.generations = generations
         self.kind = kind
         self.range = searchRange
         self.populationSize = populationSize
-        self.selection = selection
         self.chConfig = chromosomeConfig
         self.precision = precision
+        #TODO config strategii czy zrobić nową klasę
+        self.selection = selection
+        self.winnersPercent = winnersPercent
+        self.elitePercent = elitePercent
 
 
 class ChromosomeConfig:
@@ -31,8 +35,8 @@ class ChromosomeConfig:
         # 3 - jednorodna
         self.ck = ck
         self.cp = cp
-
         self.ip = ip
+
 
         #self.validateSettings()
 
