@@ -4,7 +4,7 @@ import numpy as np
 from SelectionStrategy import SelectionStrategy
 from ClassicalGene import ClassicalGene
 from Specimen import Specimen
-from XmlFile import XmlFile
+from XmlFile import XmlFileWriter
 
 class AckleyOptimalizer():
     def __init__(self, config, a = 20, b = 0.2, c = 2*math.pi):
@@ -46,7 +46,7 @@ class AckleyOptimalizer():
             newX = selectionStrategy.best(self.config)
 
     def run(self):
-        xmlFile = XmlFile()
+        xmlFile = XmlFileWriter()
         parameters = {'a': self.parameterA, 'b': self.parameterB, 'c': self.parameterC}
         xmlFile.xmlStart(self.config, parameters)
         xmlFile.openGenerationsTag()

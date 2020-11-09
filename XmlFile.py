@@ -22,7 +22,7 @@ class XmlFileWriter:
         configStr += f'<kind>{config.kind}</kind>'
         configStr += f'<populationSize>{config.populationSize}</populationSize>'
         configStr += f'<selection>{config.selection}</selection>'
-        configStr += f'<precision>{config.precission}</precision>'
+        configStr += f'<precision>{config.precision}</precision>'
         configStr += f"<functionParameters><a>{parameters['a']}</a><b>{parameters['b']}</b><c>{parameters['c']}</c></functionParameters>"
         configStr += f'<range><start>{config.range[0]}</start><end>{config.range[1]}</end></range>'
         configStr += f'<chromosomeConfig><ck>{config.chConfig.ck}</ck><cp>{config.chConfig.cp}</cp><mk>{config.chConfig.mk}</mk><mp>{config.chConfig.mp}</mp><ip>{config.chConfig.ip}</ip></chromosomeConfig>'
