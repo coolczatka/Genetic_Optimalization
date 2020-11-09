@@ -4,7 +4,7 @@ import SelectionStrategy
 from AckleyOptimalizer import AckleyOptimalizer
 from BinaryHelper import BinaryHelper
 from Chromosome import Chromosome
-from ClassicalChromosome import ClassicalChromosome
+from ClassicalGene import ClassicalChromosome
 
 def main():
     chromosomeConf = ChromosomeConfig(mk=1, ck=1)

@@ -1,18 +1,23 @@
 
 class SelectionStrategy:
 
-    def __init__(self, X, Y, elite = 0):
-        self.X = X
-        self.Y = Y
-        self.elite = elite
-
-    def best(self, percentOfBest):
+    def __init__(self):
         pass
 
-    def tournament(self, amountOfTournaments):
+    @staticmethod
+    def best(population, percentOfBest):
+        i = (len(population)*percentOfBest)/100
+        print(i)
+        specimens_to_cross = []
+        return specimens_to_cross
+
+
+    @staticmethod
+    def tournament(amountOfTournaments):
         n = amountOfTournaments
+        specimens_to_cross = []
 
-        pass
+        return specimens_to_cross
 
     def ranking(self): # nie wiem jakie parametry
         pass

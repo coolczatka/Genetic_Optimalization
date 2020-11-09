@@ -15,7 +15,7 @@ class ClassicalChromosome(AbstractChromosome):
 
     def initializeBitString(self):
         bitString = ''
-        for i in range(self.bitlength):
+        for i in range(int(self.bitlength)):
             bitString = bitString + str(randint(0, 1))
         self.bitString = bitString
         return bitString

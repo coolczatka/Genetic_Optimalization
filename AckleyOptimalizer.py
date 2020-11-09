@@ -2,7 +2,8 @@ import math
 import random
 import numpy as np
 from SelectionStrategy import SelectionStrategy
-from ClassicalChromosome import ClassicalChromosome
+from ClassicalGene import ClassicalChromosome
+from Specimen import Specimen
 from XmlFile import XmlFile
 
 class AckleyOptimalizer():
@@ -14,11 +15,16 @@ class AckleyOptimalizer():
 
         self.population = []
         for i in range(self.config.populationSize):
-            x = ClassicalChromosome(self.config.range, self.config.precission)
+            x = ClassicalChromosome(self.config.range, self.config.precision)
             x.initializeBitString()
-            y = ClassicalChromosome(self.config.range, self.config.precission)
+            y = ClassicalChromosome(self.config.range, self.config.precision)
             y.initializeBitString()
-            self.population.append([x,y])
+            genome = [x, y]
+            gen_values = [x.getValueFromBitString(), y.getValueFromBitString()]
+            print(sum(np.array(gen_values)**2))
+            print(gen_values, genome)
+            s = Specimen(genome, self.ackley(gen_values))
+            self.population.append(s)
 
     def getRandomBinary(self):
         return bin((1 << self.bitlength) - 1 & random.randint(self.config.range[0], self.config.range[1]))
@@ -33,7 +39,7 @@ class AckleyOptimalizer():
     def ackley(self, X):
         X = np.array(X)
         return -self.parameterA * math.exp(-self.parameterB * math.sqrt(sum(X**2)/len(X)))\
-               - math.exp(sum(math.cos(self.parameterC*X))/len(X)) + self.parameterA + math.e
+               -math.exp(sum([math.cos(self.parameterC*x) for x in X])/len(X)) + self.parameterA + math.e
 
     def applicateSelection(self, X, Y):
         selectionStrategy = SelectionStrategy(X, Y)
@@ -46,7 +52,7 @@ class AckleyOptimalizer():
         xmlFile.xmlStart(self.config, parameters)
         xmlFile.openGenerationsTag()
         print(self.population)
-        xmlFile.addGeneration(self.population)
+        xmlFile.addGeneration([(i.genome[0], i.genome[1]) for i in self.population])
         xmlFile.closeGenerationsTag()
         xmlFile.xmlEnd()
 
