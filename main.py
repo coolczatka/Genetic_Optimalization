@@ -5,24 +5,11 @@ from AckleyOptimalizer import AckleyOptimalizer
 from BinaryHelper import BinaryHelper
 from Chromosome import Chromosome
 from ClassicalGene import ClassicalGene
+from Gui.Gui import Gui
 
 def main():
-    chromosomeConf = ChromosomeConfig(mk=1, ck=1)
-    config = Config(1000, chromosomeConf)
-    ao = AckleyOptimalizer(config)
-    ao.run()
-    # config = ChromosomeConfig(mp=1, cp=1, ip=1, mk=3, ck=3)
-    # c1 = ClassicalGene((-10,10), 6)
-    # c1.setConfig(config)
-    # c2 = ClassicalGene((-10,10), 6)
-    # c2.setConfig(config)
-
-
-    # c1.initializeBitString()
-    # c2.initializeBitString()
-    # print(c1)
-    # c1 = c1.invert()
-    # print(c1)
+    gui = Gui()
+    gui.run()
 
 if __name__ == '__main__':
     main()
