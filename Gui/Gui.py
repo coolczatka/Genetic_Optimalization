@@ -1,29 +1,29 @@
 
 import PySimpleGUI as sg
 from Gui.Menubar import SimpleGuiMenuBar
+from Gui.Configs import *
 # Define the window's contents
 class Gui:
     def __init__(self):
         menubar = SimpleGuiMenuBar()
+        functionParameters = FunctionParametersInputs()
 
         self.components = [
             menubar,
-
         ]
-
         self.layout = [
             [menubar.getInstance()],
-            [sg.Text("Proszę podać parametry? jakie? jeszcze nie wiem")],
-            [sg.Input(key='-INPUT-')],
-            #[sg.Text(size=(40, 1), key='-OUTPUT-')],
+            [functionParameters.getInstance()],
             [sg.Button('Ok'), sg.Button('Quit')]
         ]
 
-    def run(self):
+        self.adaptLayout()
 
+    def run(self):
 
         # Create the window
         #window = sg.Window('Window Title', layout, no_titlebar=True, location=(0, 0), size=(800, 600), keep_on_top=True)
+        sg.theme('DarkAmber')
         window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(800, 600))
 
         # Display and interact with the Window using an Event Loop
@@ -40,3 +40,13 @@ class Gui:
 
         # Finish up by removing from the screen
         window.close()
+
+    def adaptLayout(self):
+        for i in range(len(self.layout)):
+            while(isinstance(self.layout[i][0], list)):
+                listt = self.layout[i]
+                self.layout.pop(i)
+                index = i
+                for ii in listt:
+                    self.layout.insert(index, ii)
+                    index+=1

@@ -3,11 +3,12 @@ import PySimpleGUI as sg
 
 class SimpleGuiMenuBar(AbstractSimpleGuiElement):
 
-    def __init__(self, name = None):
-        self.setName(name)
+    def __init__(self):
         self.setSgClass(sgclass=sg.Menu)
-        definition = [['Plik', ['Open', 'Save', 'Exit',]],
-                ['Informacje', 'Informacja'],]
+        definition = [
+            ['Plik', ['Open', 'Save', 'Exit',]],
+            ['Informacje', 'Informacja'],
+        ]
         self.setDefinition(definition)
         self.instance = self.createElement()
 
