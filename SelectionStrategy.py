@@ -4,41 +4,51 @@ from random import randint
 
 class SelectionStrategy:
 
-    def __init__(self):
-        pass
+    def __init__(self, population):
+        self.population = population
+        # pass
 
-    @staticmethod
-    def best(population, percentOfBest):
+    def best(self, percentOfBest):
         specimens_to_cross = []
-        index = math.ceil((len(population) * percentOfBest) / 100)
-        s = sorted(population, key=lambda specimen: specimen.fitness)
+        index = math.ceil((len(self.population) * percentOfBest) / 100)
+        s = sorted(self.population, key=lambda specimen: specimen.value)
 
         for i in range(int(index)):
             specimens_to_cross.append(s[i])
 
         return specimens_to_cross
 
-    @staticmethod
-    def tournament(population, numberOfSpecimenInTournament):
+    def tournament(self, numberOfSpecimenInTournament):
         n = numberOfSpecimenInTournament
-        k = math.ceil(len(population) / n)  # number of tournaments
+        tournaments = self.divide_for_tournaments(n)
+        winners = []
+        for tournament in tournaments:
+            winner = tournament[0]
+            for contestant in tournament:
+                if contestant.value < winner.value:
+                    winner = contestant
+            winners.append(winner)
+
+        specimens_to_cross = winners
+
+        return specimens_to_cross
+
+    def divide_for_tournaments(self, n):
+        k = math.ceil(len(self.population) / n)  # number of tournaments
         tournaments = []
-        temp = population
-        # podział na tournamenty
-        for j in range(k):
+        temp = self.population
+
+        for j in range(int(k)):
             t = []
             for i in range(n):
                 if len(temp) == 0:
                     break
                 x = randint(0, len(temp) - 1)
-                print(x)
                 t.append(temp[x])
                 del temp[x]
             tournaments.append(t)
+        return tournaments
 
-        specimens_to_cross = []
-
-        return specimens_to_cross
 
     def ranking(self):  # nie wiem jakie parametry
         pass

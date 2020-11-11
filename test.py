@@ -6,7 +6,10 @@ chromosomeConf = ChromosomeConfig(mk=1, ck=1)
 config = Config(1000, chromosomeConf, populationSize=421)
 #print(421*10/100)
 ao = AckleyOptimalizer(config)
-selection = SelectionStrategy()
-tc = selection.best(ao.population, config.winnersPercent)
-for s in tc:
+selection = SelectionStrategy(ao.population)
+
+tc = selection.best(config.winnersPercent)
+tour = selection.tournament(config.winnersPercent)
+
+for s in tour:
     print(str(s))
