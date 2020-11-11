@@ -7,6 +7,7 @@ from Specimen import Specimen
 from XmlFile import XmlFileWriter
 
 class AckleyOptimalizer():
+
     def __init__(self, config):
         self.config = config
 
@@ -37,16 +38,15 @@ class AckleyOptimalizer():
         return -self.config.functionParameters.a * math.exp(-self.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
                -math.exp(sum([math.cos(self.config.functionParameters.c*x) for x in X])/len(X)) + self.config.functionParameters.a + math.e
 
-    def applicateSelection(self, X, Y):
-        selectionStrategy = SelectionStrategy(X, Y)
-        if(self.config.selection == 0):
-            newX = selectionStrategy.best(self.config)
+    def applySelection(self, X, Y):
+        selection_strategy = SelectionStrategy(self.config)
+        if self.config.selection == 0:
+            newX = selection_strategy.best(self.population)
 
     def run(self):
         xmlFile = XmlFileWriter()
         xmlFile.xmlStart(self.config)
         xmlFile.openGenerationsTag()
-        #print(self.population)
         xmlFile.addGeneration([(i.genome[0], i.genome[1]) for i in self.population])
         xmlFile.closeGenerationsTag()
         xmlFile.xmlEnd()
