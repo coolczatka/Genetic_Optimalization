@@ -6,6 +6,7 @@ from BinaryHelper import BinaryHelper
 from Chromosome import Chromosome
 from ClassicalGene import ClassicalGene
 
+#
 def main():
     chromosomeConf = ChromosomeConfig(mk=1, ck=1)
     config = Config(1000, chromosomeConf)
