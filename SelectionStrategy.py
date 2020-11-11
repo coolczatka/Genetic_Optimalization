@@ -4,23 +4,23 @@ from random import randint
 
 class SelectionStrategy:
 
-    def __init__(self, population):
-        self.population = population
+    def __init__(self, config):
+        self.config = config
         # pass
 
-    def best(self, percentOfBest):
+    def best(self, population):
         specimens_to_cross = []
-        index = math.ceil((len(self.population) * percentOfBest) / 100)
-        s = sorted(self.population, key=lambda specimen: specimen.value)
+        index = math.ceil((len(population) * self.config.winnersPercent) / 100)
+        s = sorted(population, key=lambda specimen: specimen.value)
 
         for i in range(int(index)):
             specimens_to_cross.append(s[i])
 
         return specimens_to_cross
 
-    def tournament(self, numberOfSpecimenInTournament):
-        n = numberOfSpecimenInTournament
-        tournaments = self.divide_for_tournaments(n)
+    def tournament(self, population):
+        n = self.config.winnersPercent
+        tournaments = self.divide_for_tournaments(n, population)
         winners = []
         for tournament in tournaments:
             winner = tournament[0]
@@ -33,14 +33,15 @@ class SelectionStrategy:
 
         return specimens_to_cross
 
-    def divide_for_tournaments(self, n):
-        k = math.ceil(len(self.population) / n)  # number of tournaments
+    @staticmethod
+    def divide_for_tournaments(n, population):
+        k = math.ceil(len(population) / n)  # number of tournaments
         tournaments = []
-        temp = self.population
+        temp = population
 
-        for j in range(int(k)):
+        for j in range(n):
             t = []
-            for i in range(n):
+            for i in range(int(k)):
                 if len(temp) == 0:
                     break
                 x = randint(0, len(temp) - 1)
@@ -48,7 +49,6 @@ class SelectionStrategy:
                 del temp[x]
             tournaments.append(t)
         return tournaments
-
 
     def ranking(self):  # nie wiem jakie parametry
         pass
