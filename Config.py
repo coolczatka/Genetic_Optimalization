@@ -1,9 +1,14 @@
-
+from math import pi
+class FunctionParameters:
+    def __init__(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
 
 class Config:
     #kind 0 - minimalization 1 - maximalization
     def __init__(self, generations, chromosomeConfig, kind=0, searchRange=(-30, 30), populationSize=500, selection=0, precision=6,
-                  winnersPercent=10, elitePercent=10):
+                  fp = FunctionParameters(20, 0.4, 2*pi), winnersPercent=10, elitePercent=10):
         self.generations = generations
         self.kind = kind
         self.range = searchRange
@@ -15,7 +20,7 @@ class Config:
         self.selection = selection
         self.winnersPercent = winnersPercent
         self.elitePercent = elitePercent
-
+        self.functionParameters = fp
 
 class ChromosomeConfig:
     """mk = rodzaj mutacji

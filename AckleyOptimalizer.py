@@ -7,11 +7,8 @@ from Specimen import Specimen
 from XmlFile import XmlFileWriter
 
 class AckleyOptimalizer():
-    def __init__(self, config, a = 20, b = 0.2, c = 2*math.pi):
+    def __init__(self, config):
         self.config = config
-        self.parameterA = a
-        self.parameterB = b
-        self.parameterC = c
 
         self.population = []
         for i in range(self.config.populationSize):
@@ -37,8 +34,8 @@ class AckleyOptimalizer():
 
     def ackley(self, X):
         X = np.array(X)
-        return -self.parameterA * math.exp(-self.parameterB * math.sqrt(sum(X**2)/len(X)))\
-               -math.exp(sum([math.cos(self.parameterC*x) for x in X])/len(X)) + self.parameterA + math.e
+        return -self.config.functionParameters.a * math.exp(-self.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
+               -math.exp(sum([math.cos(self.config.functionParameters.c*x) for x in X])/len(X)) + self.config.functionParameters.a + math.e
 
     def applicateSelection(self, X, Y):
         selectionStrategy = SelectionStrategy(X, Y)
@@ -47,8 +44,7 @@ class AckleyOptimalizer():
 
     def run(self):
         xmlFile = XmlFileWriter()
-        parameters = {'a': self.parameterA, 'b': self.parameterB, 'c': self.parameterC}
-        xmlFile.xmlStart(self.config, parameters)
+        xmlFile.xmlStart(self.config)
         xmlFile.openGenerationsTag()
         #print(self.population)
         xmlFile.addGeneration([(i.genome[0], i.genome[1]) for i in self.population])

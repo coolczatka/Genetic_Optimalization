@@ -3,8 +3,8 @@ import PySimpleGUI as sg
 import math
 
 class FunctionParametersInputs(AbstractSimpleGuiElement):
-    @property
-    def signalMapping(self):
+    @staticmethod
+    def signalMapping():
         return {
             'CK': {'BRAK': 0, 'JEDNOPUNKTOWE': 1, 'DWUPUNKTOWE': 2, 'JEDNORODNE': 3},
             'MK': {'BRAK': 0, 'BRZEGOWA': 1, 'JEDNOPUNKTOWA': 2, 'DWUPUNKTOWA': 3},
@@ -24,10 +24,10 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
                 sg.Column([
                     [sg.Text('Konfiguracja ogólna')],
 
-                    [sg.Text('Ilość generacji'), sg.Input(key='_PARAMETER_B_', enable_events=True, default_text="1000", size=(20,1))],
-                    [sg.Text('Wielkość populacji'), sg.Input(key='_PARAMETER_B_', enable_events=True, default_text="500", size=(20,1))],
-                    [sg.Text('Rodzaj'), sg.Combo(list(self.signalMapping['KIND'].keys()), default_value='MINIMALIZACJA', key='_KIND_', enable_events=True, size=(20,1))],
-                    [sg.Text('Selekcja'), sg.Combo(list(self.signalMapping['SELECTION'].keys()), default_value='PROCENT NAJLEPSZYCH', key='_SELECTION_', enable_events=True, size=(25,1))],
+                    [sg.Text('Ilość generacji'), sg.Input(key='_GENERATIONS_', enable_events=True, default_text="1000", size=(20,1))],
+                    [sg.Text('Wielkość populacji'), sg.Input(key='_POPULATIONSIZE_', enable_events=True, default_text="500", size=(20,1))],
+                    [sg.Text('Rodzaj'), sg.Combo(list(FunctionParametersInputs.signalMapping()['KIND'].keys()), default_value='MINIMALIZACJA', key='_KIND_', enable_events=True, size=(20,1))],
+                    [sg.Text('Selekcja'), sg.Combo(list(FunctionParametersInputs.signalMapping()['SELECTION'].keys()), default_value='PROCENT NAJLEPSZYCH', key='_SELECTION_', enable_events=True, size=(25,1))],
                     [sg.Text('Dokładność'), sg.Input(key='_PRECISION_', enable_events=True, default_text="6", size=(20,1))],
                     [sg.Text('Zakres'), sg.Input(key='_RANGE_', enable_events=True, default_text="-10,10", size=(20,1))],
                 ]),
@@ -35,13 +35,13 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
                     [sg.Text('Konfiguracja chromosomów')],
 
                     [sg.Text('Rodzaj krzyżowania'),
-                     sg.Combo(list(self.signalMapping['CK'].keys()), default_value='BRAK', key='_CK_',
+                     sg.Combo(list(FunctionParametersInputs.signalMapping()['CK'].keys()), default_value='BRAK', key='_CK_',
                               enable_events=True, size=(20, 1))],
                     [sg.Text('Prawdopodobienstwo krzyżowania'),
                      sg.Input(key='_CP_', enable_events=True, default_text="0.9", size=(20, 1))],
 
                     [sg.Text('Rodzaj mutacji'),
-                     sg.Combo(list(self.signalMapping['MK'].keys()), default_value='BRAK', key='_MK_',
+                     sg.Combo(list(FunctionParametersInputs.signalMapping()['MK'].keys()), default_value='BRAK', key='_MK_',
                               enable_events=True, size=(20, 1))],
                     [sg.Text('Prawdopodobienstwo mutacji'),
                      sg.Input(key='_MP_', enable_events=True, default_text="0.9", size=(20, 1))],

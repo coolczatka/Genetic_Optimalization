@@ -13,7 +13,7 @@ class XmlFileWriter:
         self.file = open(name, 'a')
         self.generationCounter = 0
 
-    def xmlStart(self, config, parameters):
+    def xmlStart(self, config):
         xmlText = '<?xml version="1.0" encoding="UTF-8"?>' + '<result>' + f'<startTime>{datetime.now()}</startTime>'
 
         #TODO Dodac wszystkie konfigi
@@ -23,7 +23,7 @@ class XmlFileWriter:
         configStr += f'<populationSize>{config.populationSize}</populationSize>'
         configStr += f'<selection>{config.selection}</selection>'
         configStr += f'<precision>{config.precision}</precision>'
-        configStr += f"<functionParameters><a>{parameters['a']}</a><b>{parameters['b']}</b><c>{parameters['c']}</c></functionParameters>"
+        configStr += f"<functionParameters><a>{config.functionParameters.a}</a><b>{config.functionParameters.b}</b><c>{config.functionParameters.c}</c></functionParameters>"
         configStr += f'<range><start>{config.range[0]}</start><end>{config.range[1]}</end></range>'
         configStr += f'<chromosomeConfig><ck>{config.chConfig.ck}</ck><cp>{config.chConfig.cp}</cp><mk>{config.chConfig.mk}</mk><mp>{config.chConfig.mp}</mp><ip>{config.chConfig.ip}</ip></chromosomeConfig>'
         configStr += '</config>'
