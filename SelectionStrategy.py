@@ -9,14 +9,20 @@ class SelectionStrategy:
         # pass
 
     def best(self, population):
-        specimens_to_cross = []
-        index = math.ceil((len(population) * self.config.winnersPercent) / 100)
+        specimens_to_cross = self.getBest(population, self.config.winnersPercent)
+
+        return specimens_to_cross
+
+    @staticmethod
+    def getBest(population, percentOfChosen):
+        best = []
+        index = math.ceil((len(population) * percentOfChosen) / 100)
         s = sorted(population, key=lambda specimen: specimen.value)
 
         for i in range(int(index)):
-            specimens_to_cross.append(s[i])
+            best.append(s[i])
 
-        return specimens_to_cross
+        return best
 
     def tournament(self, population):
         n = self.config.winnersPercent

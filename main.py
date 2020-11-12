@@ -1,7 +1,7 @@
 from Config import Config
 from Config import ChromosomeConfig
 import SelectionStrategy
-from AckleyOptimalizer import AckleyOptimalizer
+from AckleyOptimizer import AckleyOptimizer
 from BinaryHelper import BinaryHelper
 from Chromosome import Chromosome
 from ClassicalGene import ClassicalGene

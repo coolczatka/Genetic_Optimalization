@@ -5,13 +5,14 @@ from BinaryHelper import BinaryHelper
 
 
 class ClassicalGene(AbstractChromosome):
-    def __init__(self, range, precision):
+    def __init__(self, range, precision, chromosomeConfig):
         #a,b - przedział
         self.b = range[1]
         self.a = range[0]
         self.precision = precision
         self.bitlength = math.ceil(math.log2((self.b-self.a)*(10**precision)))
         self.bitString = ''
+        self.setConfig(chromosomeConfig)
 
     def initializeBitString(self):
         bitString = ''
@@ -21,6 +22,7 @@ class ClassicalGene(AbstractChromosome):
         return bitString
 
     def getValueFromBitString(self):
+        print(self.bitString)
         return self.a + int(self.bitString, 2) * (self.b - self.a) / ((2**self.bitlength) - 1)
 
     def cross(self, chromB):
@@ -30,6 +32,7 @@ class ClassicalGene(AbstractChromosome):
 
     def crossW(self, chromB):
         newChromosomeString = ''
+        noCrossover = False
         # 1 - jednopunktowe settrings {'crosspoints': [5]}
         # 2 - dwupunktowe settings {'crosspoints': [3, 5]}
         # 3 - jednorodna
@@ -37,6 +40,8 @@ class ClassicalGene(AbstractChromosome):
             if(random() <= self.config.cp):
                 point = randint(1, len(self.bitString) - 1)
                 newChromosomeString = self.bitString[:point] + chromB.bitString[point:]
+            else:
+                noCrossover = True
         elif self.config.ck == 2:
             if(random() <= self.config.cp):
                 point1 = randint(1, len(self.bitString) - 1)
@@ -50,6 +55,8 @@ class ClassicalGene(AbstractChromosome):
                 newChromosomeString = self.bitString[:point1]
                 newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
                 newChromosomeString = newChromosomeString + self.bitString[point2:]
+            else:
+                noCrossover = True
         elif self.config.ck == 3:
             if random() <= self.config.cp:
                 for i in range(len(self.bitString)):
@@ -57,12 +64,16 @@ class ClassicalGene(AbstractChromosome):
                         newChromosomeString = newChromosomeString + self.bitString[i]
                     else:
                         newChromosomeString = newChromosomeString + chromB.bitString[i]
+            else:
+                noCrossover = True
         else:
             return self
-        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                                 self.precision)
-        return newChromosome
-
+        if not noCrossover:
+            newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
+                                                                 self.precision, self.config)
+            return newChromosome
+        else:
+            return self
 
     def mutate(self):
         # Brzegowa
@@ -94,12 +105,12 @@ class ClassicalGene(AbstractChromosome):
                 newChromosomeString = newChromosomeString2
         else:
             return self
-        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision)
+        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision, self.config)
         return newChromosome
 
     @staticmethod
-    def createFromChromosomeString(string, range, precision):
-        cc = ClassicalGene(range, precision)
+    def createFromChromosomeString(string, range, precision, chromosomeConfig):
+        cc = ClassicalGene(range, precision, chromosomeConfig)
         cc.bitString = string
         return cc
 
@@ -119,7 +130,7 @@ class ClassicalGene(AbstractChromosome):
             newChromosomeString2 += newChromosomeString[position2:]
             newChromosomeString = newChromosomeString2
         newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                                 self.precision)
+                                                                 self.precision, self.config)
         return newChromosome
 
     def __str__(self):
