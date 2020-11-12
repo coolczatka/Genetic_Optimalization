@@ -26,9 +26,11 @@ class ClassicalGene(AbstractChromosome):
         return self.a + int(self.bitString, 2) * (self.b - self.a) / ((2**self.bitlength) - 1)
 
     def cross(self, chromB):
-        a = self.crossW(chromB)
-        b = chromB.crossW(self)
-        return a, b
+        if(random() < self.config.cp):
+            a = self.crossW(chromB)
+            b = chromB.crossW(self)
+            return a, b
+        return self, chromB
 
     def crossW(self, chromB):
         newChromosomeString = ''
@@ -37,43 +39,31 @@ class ClassicalGene(AbstractChromosome):
         # 2 - dwupunktowe settings {'crosspoints': [3, 5]}
         # 3 - jednorodna
         if self.config.ck == 1:
-            if(random() <= self.config.cp):
-                point = randint(1, len(self.bitString) - 1)
-                newChromosomeString = self.bitString[:point] + chromB.bitString[point:]
-            else:
-                noCrossover = True
+            point = randint(1, len(self.bitString) - 1)
+            newChromosomeString = self.bitString[:point] + chromB.bitString[point:]
         elif self.config.ck == 2:
-            if(random() <= self.config.cp):
-                point1 = randint(1, len(self.bitString) - 1)
+            point1 = randint(1, len(self.bitString) - 1)
+            point2 = randint(1, len(self.bitString) - 1)
+            while point2 == point1:
                 point2 = randint(1, len(self.bitString) - 1)
-                while point2 == point1:
-                    point2 = randint(1, len(self.bitString) - 1)
-                if(point2 < point1):
-                    temp = point2
-                    point2 = point1
-                    point1 = temp
-                newChromosomeString = self.bitString[:point1]
-                newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
-                newChromosomeString = newChromosomeString + self.bitString[point2:]
-            else:
-                noCrossover = True
+            if(point2 < point1):
+                temp = point2
+                point2 = point1
+                point1 = temp
+            newChromosomeString = self.bitString[:point1]
+            newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
+            newChromosomeString = newChromosomeString + self.bitString[point2:]
         elif self.config.ck == 3:
-            if random() <= self.config.cp:
-                for i in range(len(self.bitString)):
-                    if(i % 2 == 0):
-                        newChromosomeString = newChromosomeString + self.bitString[i]
-                    else:
-                        newChromosomeString = newChromosomeString + chromB.bitString[i]
-            else:
-                noCrossover = True
+            for i in range(len(self.bitString)):
+                if(i % 2 == 0):
+                    newChromosomeString = newChromosomeString + self.bitString[i]
+                else:
+                    newChromosomeString = newChromosomeString + chromB.bitString[i]
         else:
             return self
-        if not noCrossover:
-            newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                                 self.precision, self.config)
-            return newChromosome
-        else:
-            return self
+        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
+                                                             self.precision, self.config)
+        return newChromosome
 
     def mutate(self):
         # Brzegowa
