@@ -5,54 +5,43 @@ from SelectionStrategy import SelectionStrategy
 from ClassicalGene import ClassicalGene
 from Specimen import Specimen
 from XmlFile import XmlFileWriter
-
+import GC
 
 class AckleyOptimizer:
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self):
 
         self.population = []
-        for i in range(self.config.populationSize):
-            x = ClassicalGene(self.config.range, self.config.precision, self.config.chConfig)
+        for i in range(GC.config.populationSize):
+            x = ClassicalGene(GC.config.range, GC.config.precision)
             x.initializeBitString()
-            y = ClassicalGene(self.config.range, self.config.precision, self.config.chConfig)
+            y = ClassicalGene(GC.config.range, GC.config.precision)
             y.initializeBitString()
 
             genome = [x, y]
             gen_values = [x.getValueFromBitString(), y.getValueFromBitString()]
-            s = Specimen(genome, self.ackley(gen_values), self.config)
+            s = Specimen(genome, self.ackley(gen_values))
             self.population.append(s)
 
     def setPopulation(self, population):
         self.population = population
 
-    def getRandomBinary(self):
-        return bin((1 << self.bitlength) - 1 & random.randint(self.config.range[0], self.config.range[1]))
-
-    @property
-    def bitlength(self):
-        i = 1
-        while(2**i < max(abs(self.config.range[0]), abs(self.config.range[1]))):
-            i = i + 1
-        return i
-
     def ackley(self, X):
         X = np.array(X)
-        return -self.config.functionParameters.a * math.exp(-self.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
-               -math.exp(sum([math.cos(self.config.functionParameters.c*x) for x in X])/len(X)) + self.config.functionParameters.a + math.e
+        return -GC.config.functionParameters.a * math.exp(-GC.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
+               -math.exp(sum([math.cos(GC.config.functionParameters.c*x) for x in X])/len(X)) + GC.config.functionParameters.a + math.e
 
     def applySelection(self):
-        selection_strategy = SelectionStrategy(self.config)
-        if self.config.selection == 0:
+        selection_strategy = SelectionStrategy()
+        if GC.config.selection == 0:
             matingSet = selection_strategy.best(self.population)
             weights = [1 for m in matingSet]
-        elif self.config.selection == 1:
+        elif GC.config.selection == 1:
             matingSet = selection_strategy.tournament(self.population)
             weights = [1 for m in matingSet]
-        elif self.config.selection == 2:
+        elif GC.config.selection == 2:
             pass
-        elif self.config.selection == 3:
+        elif GC.config.selection == 3:
             pass
         return matingSet, weights
 
@@ -60,8 +49,8 @@ class AckleyOptimizer:
         newPopulation = []
         n = len(self.population)
         eliteLen = 0
-        if self.config.elitePercent > 0:
-            elite = SelectionStrategy.getBest(self.population, self.config.elitePercent)
+        if GC.config.elitePercent > 0:
+            elite = SelectionStrategy.getBest(self.population, GC.config.elitePercent)
             eliteLen = len(elite)
             newPopulation = newPopulation + elite
         selected, weights = self.applySelection()
@@ -89,7 +78,7 @@ class AckleyOptimizer:
 
     def run(self):
         xmlFile = XmlFileWriter()
-        xmlFile.xmlStart(self.config)
+        xmlFile.xmlStart(GC.config)
         xmlFile.openGenerationsTag()
         xmlFile.addGeneration([(i.genome[0], i.genome[1]) for i in self.population])
         xmlFile.closeGenerationsTag()

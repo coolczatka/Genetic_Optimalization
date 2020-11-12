@@ -2,17 +2,16 @@ import math
 from random import randint, random
 from AbstractChromosome import AbstractChromosome
 from BinaryHelper import BinaryHelper
-
+import GC
 
 class ClassicalGene(AbstractChromosome):
-    def __init__(self, range, precision, chromosomeConfig):
+    def __init__(self, range, precision):
         #a,b - przedział
         self.b = range[1]
         self.a = range[0]
         self.precision = precision
         self.bitlength = math.ceil(math.log2((self.b-self.a)*(10**precision)))
         self.bitString = ''
-        self.setConfig(chromosomeConfig)
 
     def initializeBitString(self):
         bitString = ''
@@ -26,7 +25,7 @@ class ClassicalGene(AbstractChromosome):
         return self.a + int(self.bitString, 2) * (self.b - self.a) / ((2**self.bitlength) - 1)
 
     def cross(self, chromB):
-        if(random() < self.config.cp):
+        if(random() < GC.config.chConfig.cp):
             a = self.crossW(chromB)
             b = chromB.crossW(self)
             return a, b
@@ -38,10 +37,10 @@ class ClassicalGene(AbstractChromosome):
         # 1 - jednopunktowe settrings {'crosspoints': [5]}
         # 2 - dwupunktowe settings {'crosspoints': [3, 5]}
         # 3 - jednorodna
-        if self.config.ck == 1:
+        if GC.config.chConfig.ck == 1:
             point = randint(1, len(self.bitString) - 1)
             newChromosomeString = self.bitString[:point] + chromB.bitString[point:]
-        elif self.config.ck == 2:
+        elif GC.config.chConfig.ck == 2:
             point1 = randint(1, len(self.bitString) - 1)
             point2 = randint(1, len(self.bitString) - 1)
             while point2 == point1:
@@ -53,7 +52,7 @@ class ClassicalGene(AbstractChromosome):
             newChromosomeString = self.bitString[:point1]
             newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
             newChromosomeString = newChromosomeString + self.bitString[point2:]
-        elif self.config.ck == 3:
+        elif GC.config.chConfig.ck == 3:
             for i in range(len(self.bitString)):
                 if(i % 2 == 0):
                     newChromosomeString = newChromosomeString + self.bitString[i]
@@ -62,25 +61,25 @@ class ClassicalGene(AbstractChromosome):
         else:
             return self
         newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                             self.precision, self.config)
+                                                             self.precision)
         return newChromosome
 
     def mutate(self):
         # Brzegowa
         newChromosomeString = self.bitString
-        if self.config.mk == 1:
+        if GC.config.chConfig.mk == 1:
             rand = random()
-            if rand <= self.config.mp:
+            if rand <= GC.config.chConfig.mp:
                 length = len(newChromosomeString)
                 newChromosomeString = newChromosomeString[:length-1] + BinaryHelper.flipByte(newChromosomeString[-1])
         # jednopunktowa
-        elif self.config.mk == 2:
-            if (random() <= self.config.mp):
+        elif GC.config.chConfig.mk == 2:
+            if (random() <= GC.config.chConfig.mp):
                 position = randint(0, len(newChromosomeString) - 1)
                 newChromosomeString = newChromosomeString[:position] + BinaryHelper.flipByte(newChromosomeString[position]) + newChromosomeString[position+1:]
         # dwupunktowa
-        elif self.config.mk == 3:
-            if (random() <= self.config.mp):
+        elif GC.config.chConfig.mk == 3:
+            if (random() <= GC.config.chConfig.mp):
                 position1 = randint(0, len(newChromosomeString) - 1)
                 position2 = randint(0, len(newChromosomeString) - 1)
                 while position1 == position2:
@@ -95,7 +94,7 @@ class ClassicalGene(AbstractChromosome):
                 newChromosomeString = newChromosomeString2
         else:
             return self
-        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision, self.config)
+        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision, GC.config.chConfig)
         return newChromosome
 
     @staticmethod
@@ -106,7 +105,7 @@ class ClassicalGene(AbstractChromosome):
 
     def invert(self):
         newChromosomeString = self.bitString
-        if(random() <= self.config.ip):
+        if(random() <= GC.config.chConfig.ip):
             position1 = randint(0, len(newChromosomeString) - 1)
             position2 = randint(0, len(newChromosomeString) - 1)
             while position1 == position2:
@@ -120,7 +119,7 @@ class ClassicalGene(AbstractChromosome):
             newChromosomeString2 += newChromosomeString[position2:]
             newChromosomeString = newChromosomeString2
         newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                                 self.precision, self.config)
+                                                                 self.precision, GC.config.chConfig)
         return newChromosome
 
     def __str__(self):

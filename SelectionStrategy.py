@@ -1,15 +1,11 @@
 import math
 from random import randint
-
+import GC
 
 class SelectionStrategy:
 
-    def __init__(self, config):
-        self.config = config
-        # pass
-
     def best(self, population):
-        specimens_to_cross = self.getBest(population, self.config.winnersPercent)
+        specimens_to_cross = self.getBest(population, GC.config.winnersPercent)
 
         return specimens_to_cross
 
@@ -25,7 +21,7 @@ class SelectionStrategy:
         return best
 
     def tournament(self, population):
-        n = self.config.winnersPercent
+        n = GC.config.winnersPercent
         tournaments = self.divide_for_tournaments(n, population)
         winners = []
         for tournament in tournaments:

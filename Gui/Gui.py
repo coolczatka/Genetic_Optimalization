@@ -4,6 +4,7 @@ from Gui.Menubar import SimpleGuiMenuBar
 from Gui.Configs import *
 from Config import Config, ChromosomeConfig
 from AckleyOptimizer import AckleyOptimizer
+import GC
 # Define the window's contents
 class Gui:
     def __init__(self):
@@ -36,8 +37,8 @@ class Gui:
             for i in self.components:
                 i.processSignals(args)
             if args[0] == 'START':
-                config = self.makeConfig(args[1])
-                aopt = AckleyOptimizer(config)
+                GC.config = self.makeConfig(args[1])
+                aopt = AckleyOptimizer()
                 aopt.run()
             if args[0] == sg.WINDOW_CLOSED:
                 break
