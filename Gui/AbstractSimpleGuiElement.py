@@ -5,7 +5,6 @@ class AbstractSimpleGuiElement:
     def setSgClass(self, sgclass):
         self.sgClass = sgclass
 
-
     def setDefinition(self, definition):
         self.definition = definition
 
@@ -14,5 +13,6 @@ class AbstractSimpleGuiElement:
             return self.sgClass(self.definition)
         else:
             return self.definition
+
     def processSignals(self, args):
         raise NotImplementedError('NI')

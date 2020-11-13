@@ -21,7 +21,7 @@ class ClassicalGene(AbstractChromosome):
         return bitString
 
     def getValueFromBitString(self):
-        print(self.bitString)
+        #print(self.bitString)
         return self.a + int(self.bitString, 2) * (self.b - self.a) / ((2**self.bitlength) - 1)
 
     def cross(self, chromB):

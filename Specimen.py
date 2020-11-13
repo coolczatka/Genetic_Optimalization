@@ -1,18 +1,21 @@
 import numpy as np
 import math
-import GC
 
 class Specimen:
-    def __init__(self, genome, value):
+    def __init__(self, genome, value, config):
         self.genome = genome
         self.value = value
+        self.config = config
 
     def __str__(self):
+
         string = "Genome: "
         for x in self.genome:
             string = string + str(x) + " "
-
-        string = string + " Value: " + str(self.value)
+        string = string + "\n"
+        for x in self.genome:
+            string = string + str(x.getValueFromBitString()) + " "
+        string = string + " Value: " + str(self.value) + "\n\n"
         return string
 
     def mating(self, partner):
@@ -26,7 +29,7 @@ class Specimen:
 
         #print(genome1)
         #print(genome2[1])
-        print(GC.config.chConfig.ck)
+        #print(self.config.chConfig.ck)
         val1 = [gene.getValueFromBitString() for gene in genome1]
         val2 = [gene.getValueFromBitString() for gene in genome2]
 
@@ -34,8 +37,8 @@ class Specimen:
         #print(val2)
         #print(genome2[1])
 
-        newSpec1 = Specimen(genome1, self.ackley(val1), GC.config)
-        newSpec2 = Specimen(genome2, self.ackley(val2), GC.config)
+        newSpec1 = Specimen(genome1, self.ackley(val1), self.config)
+        newSpec2 = Specimen(genome2, self.ackley(val2), self.config)
         return newSpec1, newSpec2
 
     def setGene(self, gene, pos):
@@ -43,5 +46,5 @@ class Specimen:
 
     def ackley(self, X):
         X = np.array(X)
-        return -GC.config.functionParameters.a * math.exp(-GC.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
-               -math.exp(sum([math.cos(GC.config.functionParameters.c*x) for x in X])/len(X)) + GC.config.functionParameters.a + math.e
+        return -self.config.functionParameters.a * math.exp(-self.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
+               -math.exp(sum([math.cos(self.config.functionParameters.c*x) for x in X])/len(X)) + self.config.functionParameters.a + math.e

@@ -31,6 +31,11 @@ class AckleyOptimizer:
         return -GC.config.functionParameters.a * math.exp(-GC.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
                -math.exp(sum([math.cos(GC.config.functionParameters.c*x) for x in X])/len(X)) + GC.config.functionParameters.a + math.e
 
+    def getBestOfGeneration(self):
+        s = sorted(self.population, key=lambda specimen: specimen.value)
+        best = s[0]
+        return best
+
     def applySelection(self):
         selection_strategy = SelectionStrategy()
         if GC.config.selection == 0:
@@ -76,6 +81,15 @@ class AckleyOptimizer:
 
         return newPopulation
 
+    def runGenerations(self):
+        best = []
+        for i in range(self.config.generations):
+            newpop = self.lifecycle()
+            self.population = newpop
+            bestSpecimen = self.getBestOfGeneration()
+            best.append(bestSpecimen)
+        return best
+
     def run(self):
         xmlFile = XmlFileWriter()
         xmlFile.xmlStart(GC.config)
@@ -83,6 +97,7 @@ class AckleyOptimizer:
         xmlFile.addGeneration([(i.genome[0], i.genome[1]) for i in self.population])
         xmlFile.closeGenerationsTag()
         xmlFile.xmlEnd()
+
 
 
 

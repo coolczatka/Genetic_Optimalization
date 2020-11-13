@@ -4,20 +4,25 @@ from Gui.Menubar import SimpleGuiMenuBar
 from Gui.Configs import *
 from Config import Config, ChromosomeConfig
 from AckleyOptimizer import AckleyOptimizer
-import GC
 # Define the window's contents
+from Gui.Plotter import Plotter
+
+
 class Gui:
     def __init__(self):
         menubar = SimpleGuiMenuBar()
+        self.plotter = Plotter()
         functionParameters = FunctionParametersInputs()
 
         self.components = [
             menubar,
+
         ]
         self.layout = [
             [menubar.getInstance()],
             [functionParameters.getInstance()],
-            [sg.Button('START')]
+            [sg.Button('START')],
+            [self.plotter.getInstance()]
         ]
 
         self.adaptLayout()
@@ -37,9 +42,14 @@ class Gui:
             for i in self.components:
                 i.processSignals(args)
             if args[0] == 'START':
-                GC.config = self.makeConfig(args[1])
-                aopt = AckleyOptimizer()
-                aopt.run()
+                config = self.makeConfig(args[1])
+                aopt = AckleyOptimizer(config)
+                #aopt.run()
+                best = aopt.runGenerations()
+                best_values = [b.value for b in best]
+                x = range(config.generations)
+                figure = self.plotter.best_by_generations_plot(x, best_values)
+                self.plotter.draw_figure_(window['fig_cv'].TKCanvas, figure)
             if args[0] == sg.WINDOW_CLOSED:
                 break
             # Output a message to the window
