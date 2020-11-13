@@ -8,11 +8,14 @@ class Specimen:
         self.config = config
 
     def __str__(self):
+
         string = "Genome: "
         for x in self.genome:
             string = string + str(x) + " "
-
-        string = string + " Value: " + str(self.value)
+        string = string + "\n"
+        for x in self.genome:
+            string = string + str(x.getValueFromBitString()) + " "
+        string = string + " Value: " + str(self.value) + "\n\n"
         return string
 
     def mating(self, partner):
@@ -26,7 +29,7 @@ class Specimen:
 
         #print(genome1)
         #print(genome2[1])
-        print(self.config.chConfig.ck)
+        #print(self.config.chConfig.ck)
         val1 = [gene.getValueFromBitString() for gene in genome1]
         val2 = [gene.getValueFromBitString() for gene in genome2]
 
