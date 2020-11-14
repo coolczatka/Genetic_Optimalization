@@ -7,12 +7,16 @@ from AckleyOptimizer import AckleyOptimizer
 # Define the window's contents
 from Gui.Plotter import Plotter
 import GC
-
+from datetime import datetime
+from time import time
 class Gui:
 
     def __init__(self):
         menubar = SimpleGuiMenuBar()
-        self.plotter = Plotter()
+        self.bestPlotter = Plotter('best')
+        self.meanPlotter = Plotter('mean')
+        self.stdPlotter = Plotter('std')
+
         functionParameters = FunctionParametersInputs()
 
         self.components = [
@@ -23,8 +27,8 @@ class Gui:
         self.layout = [
             [menubar.getInstance()],
             [functionParameters.getInstance()],
-            [sg.Button('START')],
-            [self.plotter.getInstance()]
+            [sg.Button('START'), sg.Text('Czas wykonania: ', size=(20,1), font="Helvetica 10", key='_TIME_LABEL_')],
+            [self.bestPlotter.getInstance()]
         ]
 
         self.adaptLayout()
@@ -46,12 +50,33 @@ class Gui:
             if args[0] == 'START':
                 GC.config = self.makeConfig(args[1])
                 aopt = AckleyOptimizer()
-                #aopt.run()
-                best, means, stds = aopt.runGenerations()
+                startTime = time()
+                best, means, stds = aopt.run()
+                endTime = time()
+                duration = endTime-startTime
+                print(duration)
+                label = 'Czas wykonania: ' + str(round(endTime-startTime, 2)) + 's'
+                print(label)
+                GC.window['_TIME_LABEL_'].update(label)
                 best_values = [b.value for b in best]
+
+                folder = 'datasets/'
+                extension = '.png'
+
+                now = datetime.now()
+                prefix = folder + now.date().__str__() + f'_{now.hour}_{now.minute}_{now.second}'
+
                 x = range(GC.config.generations)
-                figure = self.plotter.best_by_generations_plot(x, means)
-                self.plotter.draw_figure_(GC.window['fig_cv'].TKCanvas, figure)
+                bestFigure = self.bestPlotter.best_by_generations_plot(x, best_values)
+                meanFigure = self.meanPlotter.mean_plot(x, means)
+                stdFigure = self.stdPlotter.std_plot(x, stds)
+
+                if(GC.config.outputConfig.savePlots):
+                    bestFigure.savefig(prefix+'_best'+extension)
+                    meanFigure.savefig(prefix+'_mean'+extension)
+                    stdFigure.savefig(prefix+'_std'+extension)
+
+                self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, bestFigure)
             if args[0] == sg.WINDOW_CLOSED:
                 break
             # Output a message to the window
@@ -78,7 +103,7 @@ class Gui:
             cp=float(values['_CP_']),
             ip=float(values['_IP_'])
         )
-        print(chromosomeConfig.ck)
+        oc = GC.config.outputConfig
         minRange, maxRange = values['_RANGE_'].split(',')
         config = Config(
             generations=int(values['_GENERATIONS_']),
@@ -89,6 +114,7 @@ class Gui:
             selection=FunctionParametersInputs.signalMapping()['SELECTION'][values['_SELECTION_']],
             precision=int(values['_PRECISION_']),
             selectionParameter=float(values['_SELECTIONPARAMETER_']),
-            elitePercent=float(values['_ELITE_PERCENT_'])
+            elitePercent=float(values['_ELITE_PERCENT_']),
         )
+        config.outputConfig = oc
         return config

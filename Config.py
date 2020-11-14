@@ -45,7 +45,7 @@ class ChromosomeConfig:
         self.ip = ip
 
 class OutputConfig:
-    def __init__(self, exportToFile = True, savePlots = True, npfes = False):
+    def __init__(self, exportToFile = False, savePlots = False, npfes = False):
         self.exportToFile = exportToFile
         self.savePlots = savePlots
         self.newPlotForEachStart = npfes

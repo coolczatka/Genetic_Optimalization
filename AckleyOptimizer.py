@@ -107,9 +107,28 @@ class AckleyOptimizer:
     def run(self):
         best = []
         if(GC.config.outputConfig.exportToFile):
-            best, means, stds = self.runGenerations()
+            best = []
+            means = []
+            stds = []
+
+            xmlFile = XmlFileWriter()
+            xmlFile.xmlStart(GC.config)
+            xmlFile.openGenerationsTag()
+            for i in range(GC.config.generations):
+                newpop = self.lifecycle()
+                self.population = newpop
+                xmlFile.addGeneration(self.population)
+                bestSpecimen = self.getBestOfGeneration()
+                mean = self.getMeanOfGeneration()
+                std = self.getStdOfGeneration()
+                best.append(bestSpecimen)
+                means.append(mean)
+                stds.append(std)
+            xmlFile.closeGenerationsTag()
+            xmlFile.xmlEnd()
+            return best, means, stds
         else:
-            best, means, stds = self.runGenerations()
+            return self.runGenerations()
 
 
 

@@ -1,6 +1,6 @@
 from datetime import datetime
 from xml.dom import minidom
-from Config import Config, ChromosomeConfig
+from Config import Config, ChromosomeConfig, FunctionParameters, OutputConfig
 
 class XmlFileWriter:
 
@@ -13,10 +13,7 @@ class XmlFileWriter:
         self.file = open(name, 'a')
         self.generationCounter = 0
 
-    def xmlStart(self, config):
-        xmlText = '<?xml version="1.0" encoding="UTF-8"?>' + '<result>' + f'<startTime>{datetime.now()}</startTime>'
-
-        #TODO Dodac wszystkie konfigi
+    def configXml(self, config):
         configStr = '<config>'
         configStr += f'<generationsCount>{config.generations}</generationsCount>'
         configStr += f'<kind>{config.kind}</kind>'
@@ -26,22 +23,33 @@ class XmlFileWriter:
         configStr += f"<functionParameters><a>{config.functionParameters.a}</a><b>{config.functionParameters.b}</b><c>{config.functionParameters.c}</c></functionParameters>"
         configStr += f'<range><start>{config.range[0]}</start><end>{config.range[1]}</end></range>'
         configStr += f'<chromosomeConfig><ck>{config.chConfig.ck}</ck><cp>{config.chConfig.cp}</cp><mk>{config.chConfig.mk}</mk><mp>{config.chConfig.mp}</mp><ip>{config.chConfig.ip}</ip></chromosomeConfig>'
-        configStr += '</config>'
 
+        configStr += f'<selectionParameter>{config.selectionParameter}</selectionParameter>'
+        configStr += f'<elitePercent>{config.elitePercent}</elitePercent>'
+
+        configStr += f'<outputConfig><exportToFile>{int(config.outputConfig.exportToFile)}</exportToFile><savePlots>{int(config.outputConfig.savePlots)}</savePlots><newPlotForEachStart>{int(config.outputConfig.newPlotForEachStart)}</newPlotForEachStart></outputConfig>'
+
+        configStr += '</config>'
+        return configStr
+
+    def xmlStart(self, config):
+        xmlText = '<?xml version="1.0" encoding="UTF-8"?>' + '<result>' + f'<startTime>{datetime.now()}</startTime>'
+        configStr = self.configXml(config)
         xmlText += configStr
         self.file.write(xmlText)
 
     def openGenerationsTag(self):
         self.file.write('<generations>')
 
-    def addGeneration(self, generation):
+    def addGeneration(self, population):
         self.generationCounter += 1
         self.file.write(f'<generation number="{self.generationCounter}">')
-        for individual in generation:
-            individualXml = '<individual>'
-            individualXml += f'<chromosome position="0">{individual[0].bitString}</chromosome>'
-            individualXml += f'<chromosome position="1">{individual[1].bitString}</chromosome>'
-            individualXml += '</individual>'
+        for specimen in population:
+            individualXml = '<specimen>'
+            individualXml += f'<value>{specimen.value}</value>'
+            for i, gene in enumerate(specimen.genome):
+                individualXml += f'<gene position="{i}"><bitvalue>{gene.bitString}</bitvalue><value>{gene.getValueFromBitString()}</value></gene>'
+            individualXml += '</specimen>'
             self.file.write(individualXml)
         self.file.write('</generation>')
 
@@ -58,7 +66,7 @@ class XmlFileReader:
     def __init__(self, name):
         self.directory = 'datasets/'
         self.xmlFile = minidom.parse(self.directory + name)
-    #TODO Dodac wszystkie konfigi
+
     def getConfig(self):
         configxml = self.xmlFile.getElementsByTagName('config')[0]
 
@@ -67,6 +75,7 @@ class XmlFileReader:
         a = functionParametersXml.getElementsByTagName('a')[0].firstChild.nodeValue
         b = functionParametersXml.getElementsByTagName('b')[0].firstChild.nodeValue
         c = functionParametersXml.getElementsByTagName('c')[0].firstChild.nodeValue
+        fp = FunctionParameters(a, b, c)
 
         rangeXml = configxml.getElementsByTagName('range')[0]
 
@@ -78,6 +87,8 @@ class XmlFileReader:
         populationSize = configxml.getElementsByTagName('populationSize')[0].firstChild.nodeValue
         selection = configxml.getElementsByTagName('selection')[0].firstChild.nodeValue
         precision = configxml.getElementsByTagName('precision')[0].firstChild.nodeValue
+        selectionParameter = configxml.getElementsByTagName('selectionParameter')[0].firstChild.nodeValue
+        elitePercent = configxml.getElementsByTagName('elitePercent')[0].firstChild.nodeValue
 
         chromosomeConfigXml = configxml.getElementsByTagName('chromosomeConfig')[0]
 
@@ -88,7 +99,24 @@ class XmlFileReader:
         ip = chromosomeConfigXml.getElementsByTagName('ip')[0].firstChild.nodeValue
         chromosomeConfig = ChromosomeConfig(mk, mp, ck, cp, ip)
 
-        return Config(generationsCount, chromosomeConfig, kind, (minRange, maxRange), populationSize, selection,
-                      precision)
+        outputConfigXml = configxml.getElementsByTagName('outputConfig')[0]
+        exportToFile = outputConfigXml.getElementsByTagName('exportToFile')[0].firstChild.nodeValue
+        savePlots = outputConfigXml.getElementsByTagName('savePlots')[0].firstChild.nodeValue
+        newPlotForEachStart = outputConfigXml.getElementsByTagName('newPlotForEachStart')[0].firstChild.nodeValue
 
+        oc = OutputConfig(exportToFile, savePlots, newPlotForEachStart)
 
+        config = Config(
+            generations=generationsCount,
+            chromosomeConfig=chromosomeConfig,
+            kind=kind,
+            searchRange=(minRange, maxRange),
+            populationSize=populationSize,
+            selection=selection,
+            precision=precision,
+            fp=fp,
+            selectionParameter=selectionParameter,
+            elitePercent=elitePercent
+        )
+        config.outputConfig = oc
+        return config
