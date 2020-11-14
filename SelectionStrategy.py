@@ -21,7 +21,7 @@ class SelectionStrategy:
         return best
 
     def tournament(self, population):
-        n = GC.config.selectionParameter
+        n = int(GC.config.selectionParameter)
         tournaments = self.divide_for_tournaments(n, population)
         winners = []
         for tournament in tournaments:

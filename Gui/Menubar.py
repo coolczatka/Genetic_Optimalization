@@ -17,7 +17,7 @@ class SimpleGuiMenuBar(AbstractSimpleGuiElement):
     def processSignals(self, args):
         signal = args[0]
         values = args[1]
-        if signal == 'Informacja':
+        if signal == 'O programie':
             sg.popup('Projekt 1 Obliczenia Ewolucyjne 2020', title="Informacja")
         elif signal == 'Exit':
             args[0] = sg.WINDOW_CLOSED

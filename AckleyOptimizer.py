@@ -36,6 +36,14 @@ class AckleyOptimizer:
         best = s[0]
         return best
 
+    def getMeanOfGeneration(self):
+        specimenValues = [sp.value for sp in self.population]
+        return np.mean(specimenValues)
+
+    def getStdOfGeneration(self):
+        specimenValues = [sp.value for sp in self.population]
+        return np.std(specimenValues)
+
     def applySelection(self):
         selection_strategy = SelectionStrategy()
         if GC.config.selection == 0:
@@ -83,20 +91,25 @@ class AckleyOptimizer:
 
     def runGenerations(self):
         best = []
+        means = []
+        stds = []
         for i in range(GC.config.generations):
             newpop = self.lifecycle()
             self.population = newpop
             bestSpecimen = self.getBestOfGeneration()
+            mean = self.getMeanOfGeneration()
+            std = self.getStdOfGeneration()
             best.append(bestSpecimen)
-        return best
+            means.append(mean)
+            stds.append(std)
+        return best, means, stds
 
     def run(self):
-        xmlFile = XmlFileWriter()
-        xmlFile.xmlStart(GC.config)
-        xmlFile.openGenerationsTag()
-        xmlFile.addGeneration([(i.genome[0], i.genome[1]) for i in self.population])
-        xmlFile.closeGenerationsTag()
-        xmlFile.xmlEnd()
+        best = []
+        if(GC.config.outputConfig.exportToFile):
+            best, means, stds = self.runGenerations()
+        else:
+            best, means, stds = self.runGenerations()
 
 
 

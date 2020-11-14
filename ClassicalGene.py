@@ -94,11 +94,11 @@ class ClassicalGene(AbstractChromosome):
                 newChromosomeString = newChromosomeString2
         else:
             return self
-        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision, GC.config.chConfig)
+        newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b), self.precision)
         return newChromosome
 
     @staticmethod
-    def createFromChromosomeString(string, range, precision, chromosomeConfig):
+    def createFromChromosomeString(string, range, precision):
         cc = ClassicalGene(range, precision)
         cc.bitString = string
         return cc
@@ -119,7 +119,7 @@ class ClassicalGene(AbstractChromosome):
             newChromosomeString2 += newChromosomeString[position2:]
             newChromosomeString = newChromosomeString2
         newChromosome = ClassicalGene.createFromChromosomeString(newChromosomeString, (self.a, self.b),
-                                                                 self.precision, GC.config.chConfig)
+                                                                 self.precision)
         return newChromosome
 
     def __str__(self):

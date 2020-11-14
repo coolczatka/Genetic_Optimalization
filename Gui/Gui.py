@@ -42,16 +42,15 @@ class Gui:
             args = [event, values]
             # See if user wants to quit or window was closed
             for i in self.components:
-                print(args)
                 i.processSignals(args)
             if args[0] == 'START':
                 GC.config = self.makeConfig(args[1])
                 aopt = AckleyOptimizer()
                 #aopt.run()
-                best = aopt.runGenerations()
+                best, means, stds = aopt.runGenerations()
                 best_values = [b.value for b in best]
                 x = range(GC.config.generations)
-                figure = self.plotter.best_by_generations_plot(x, best_values)
+                figure = self.plotter.best_by_generations_plot(x, means)
                 self.plotter.draw_figure_(GC.window['fig_cv'].TKCanvas, figure)
             if args[0] == sg.WINDOW_CLOSED:
                 break
@@ -79,6 +78,7 @@ class Gui:
             cp=float(values['_CP_']),
             ip=float(values['_IP_'])
         )
+        print(chromosomeConfig.ck)
         minRange, maxRange = values['_RANGE_'].split(',')
         config = Config(
             generations=int(values['_GENERATIONS_']),

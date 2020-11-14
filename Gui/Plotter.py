@@ -46,6 +46,38 @@ class Plotter(AbstractSimpleGuiElement):
         plt.xlabel('X')
         plt.ylabel('Y')
         plt.grid()
+        
+        return fig
+
+    @staticmethod
+    def mean_plot(x, y):
+        plt.figure(1)
+        fig = plt.gcf()
+        DPI = fig.get_dpi()
+        # fig.set_size_inches(404 * 2 / float(DPI), 404 / float(DPI))
+        # x = np.linspace(0, 2 * np.pi)
+        # y = np.sin(x)
+        plt.plot(x, y)  # y best values, x - number of generation
+        plt.title("Mean of population")
+        plt.xlabel('Mean')
+        plt.ylabel('Generation')
+        plt.grid()
+
+        return fig
+
+    @staticmethod
+    def std_plot(x, y):
+        plt.figure(1)
+        fig = plt.gcf()
+        DPI = fig.get_dpi()
+        # fig.set_size_inches(404 * 2 / float(DPI), 404 / float(DPI))
+        # x = np.linspace(0, 2 * np.pi)
+        # y = np.sin(x)
+        plt.plot(x, y)  # y best values, x - number of generation
+        plt.title("Std of population")
+        plt.xlabel('Std')
+        plt.ylabel('Generation')
+        plt.grid()
 
         return fig
 
