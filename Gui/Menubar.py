@@ -10,7 +10,7 @@ class SimpleGuiMenuBar(AbstractSimpleGuiElement):
         self.setSgClass(sgclass=sg.Menu)
         definition = [
             ['Opcje', ['Ustawienia wyjścia', 'Zapisz konfigurację', 'Exit',]],
-            ['Informacje', 'O programie'],
+            ['Informacje', ['Wzór funkcji', 'O programie']],
         ]
         self.setDefinition(definition)
         self.instance = self.createElement()
@@ -24,6 +24,17 @@ class SimpleGuiMenuBar(AbstractSimpleGuiElement):
             args[0] = sg.WINDOW_CLOSED
         elif signal == 'Zapisz konfigurację':
             args[0] = 'EXPORT_CONFIG'
+        elif signal == 'Wzór funkcji':
+            layout = [
+                [sg.Image('Gui/ackley_formula.png')],
+                [sg.Button('Ok')]
+            ]
+            infoWindow = sg.Window('Wzór', layout)
+            while True:
+                event, values = infoWindow.read()
+                if event == sg.WINDOW_CLOSED or event == 'Ok':
+                    break
+            infoWindow.close()
         elif signal == 'Ustawienia wyjścia':
             layout = [
                 [sg.Checkbox('Eksportuj wynik do XML', key='_EXPORT_XML_', default=GC.config.outputConfig.exportToFile)],
@@ -32,7 +43,7 @@ class SimpleGuiMenuBar(AbstractSimpleGuiElement):
 
                 [sg.Button('Zapisz', key='_SAVE_SETTINGS_')]
             ]
-            optionWindow = sg.Window('Ustawienia wyjścia', layout, size=(400, 300))
+            optionWindow = sg.Window('Ustawienia wyjścia', layout)
 
             while True:
                 event, values = optionWindow.read()
