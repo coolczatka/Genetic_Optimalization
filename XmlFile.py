@@ -1,16 +1,17 @@
 from datetime import datetime
 from xml.dom import minidom
 from Config import Config, ChromosomeConfig, FunctionParameters, OutputConfig
-
+import GC
 class XmlFileWriter:
 
-    def __init__(self):
-        folder = 'datasets/'
-        extension = '.xml'
+    def __init__(self, name=''):
+        if(name == ''):
+            folder = 'datasets/'
+            extension = '.xml'
 
-        now = datetime.now()
-        name = folder + now.date().__str__() + f'_{now.hour}_{now.minute}_{now.second}'+extension
-        self.file = open(name, 'a')
+            now = datetime.now()
+            name = folder + now.date().__str__() + f'_{now.hour}_{now.minute}_{now.second}'+extension
+        self.file = open(name, 'w')
         self.generationCounter = 0
 
     def configXml(self, config):
@@ -32,11 +33,13 @@ class XmlFileWriter:
         configStr += '</config>'
         return configStr
 
-    def xmlStart(self, config):
+    def xmlStart(self):
         xmlText = '<?xml version="1.0" encoding="UTF-8"?>' + '<result>' + f'<startTime>{datetime.now()}</startTime>'
-        configStr = self.configXml(config)
-        xmlText += configStr
         self.file.write(xmlText)
+
+    def addConfig(self, config):
+        configStr = self.configXml(config)
+        self.file.write(configStr)
 
     def openGenerationsTag(self):
         self.file.write('<generations>')
@@ -45,8 +48,9 @@ class XmlFileWriter:
         self.generationCounter += 1
         self.file.write(f'<generation number="{self.generationCounter}">')
         for specimen in population:
+            sign = 1 if GC.config.kind == 0 else -1
             individualXml = '<specimen>'
-            individualXml += f'<value>{specimen.value}</value>'
+            individualXml += f'<value>{sign*specimen.value}</value>'
             for i, gene in enumerate(specimen.genome):
                 individualXml += f'<gene position="{i}"><bitvalue>{gene.bitString}</bitvalue><value>{gene.getValueFromBitString()}</value></gene>'
             individualXml += '</specimen>'
@@ -61,11 +65,14 @@ class XmlFileWriter:
         self.file.write(xmlText)
         self.file.close()
 
+    def fileWriteAndClose(self, string):
+        self.file.write(string)
+        self.file.close()
+
 class XmlFileReader:
 
     def __init__(self, name):
-        self.directory = 'datasets/'
-        self.xmlFile = minidom.parse(self.directory + name)
+        self.xmlFile = minidom.parse(name)
 
     def getConfig(self):
         configxml = self.xmlFile.getElementsByTagName('config')[0]
@@ -97,7 +104,7 @@ class XmlFileReader:
         mk = chromosomeConfigXml.getElementsByTagName('mk')[0].firstChild.nodeValue
         mp = chromosomeConfigXml.getElementsByTagName('mp')[0].firstChild.nodeValue
         ip = chromosomeConfigXml.getElementsByTagName('ip')[0].firstChild.nodeValue
-        chromosomeConfig = ChromosomeConfig(mk, mp, ck, cp, ip)
+        chromosomeConfig = ChromosomeConfig(int(mk), mp, int(ck), cp, ip)
 
         outputConfigXml = configxml.getElementsByTagName('outputConfig')[0]
         exportToFile = outputConfigXml.getElementsByTagName('exportToFile')[0].firstChild.nodeValue
@@ -109,14 +116,22 @@ class XmlFileReader:
         config = Config(
             generations=generationsCount,
             chromosomeConfig=chromosomeConfig,
-            kind=kind,
+            kind=int(kind),
             searchRange=(minRange, maxRange),
             populationSize=populationSize,
-            selection=selection,
+            selection=int(selection),
             precision=precision,
             fp=fp,
             selectionParameter=selectionParameter,
             elitePercent=elitePercent
         )
         config.outputConfig = oc
+        print(config.kind)
         return config
+
+def exportConfig(config):
+    file = XmlFileWriter('config.xml')
+    xmlStr = '<?xml version="1.0" encoding="UTF-8"?>'
+    xmlStr += file.configXml(config)
+    file.fileWriteAndClose(xmlStr)
+

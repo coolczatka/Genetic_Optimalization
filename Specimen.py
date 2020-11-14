@@ -46,5 +46,6 @@ class Specimen:
 
     def ackley(self, X):
         X = np.array(X)
-        return -GC.config.functionParameters.a * math.exp(-GC.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
-               -math.exp(sum([math.cos(GC.config.functionParameters.c*x) for x in X])/len(X)) + GC.config.functionParameters.a + math.e
+        sign = 1 if GC.config.kind == 0 else -1
+        return sign*(-GC.config.functionParameters.a * math.exp(-GC.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
+               -math.exp(sum([math.cos(GC.config.functionParameters.c*x) for x in X])/len(X)) + GC.config.functionParameters.a + math.e)

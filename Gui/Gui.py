@@ -9,6 +9,7 @@ from Gui.Plotter import Plotter
 import GC
 from datetime import datetime
 from time import time
+from XmlFile import exportConfig
 class Gui:
 
     def __init__(self):
@@ -47,18 +48,18 @@ class Gui:
             # See if user wants to quit or window was closed
             for i in self.components:
                 i.processSignals(args)
+            if args[0] == 'EXPORT_CONFIG':
+                GC.config = self.makeConfig(values)
+                exportConfig(GC.config)
             if args[0] == 'START':
                 GC.config = self.makeConfig(args[1])
                 aopt = AckleyOptimizer()
                 startTime = time()
-                best, means, stds = aopt.run()
+                best_values, means, stds = aopt.run()
                 endTime = time()
                 duration = endTime-startTime
-                print(duration)
-                label = 'Czas wykonania: ' + str(round(endTime-startTime, 2)) + 's'
-                print(label)
+                label = 'Czas wykonania: ' + str(round(duration, 2)) + 's'
                 GC.window['_TIME_LABEL_'].update(label)
-                best_values = [b.value for b in best]
 
                 folder = 'datasets/'
                 extension = '.png'

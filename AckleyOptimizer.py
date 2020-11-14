@@ -37,11 +37,13 @@ class AckleyOptimizer:
         return best
 
     def getMeanOfGeneration(self):
-        specimenValues = [sp.value for sp in self.population]
+        sign = 1 if GC.config.kind == 0 else -1
+        specimenValues = [sign*sp.value for sp in self.population]
         return np.mean(specimenValues)
 
     def getStdOfGeneration(self):
-        specimenValues = [sp.value for sp in self.population]
+        sign = 1 if GC.config.kind == 0 else -1
+        specimenValues = [sign*sp.value for sp in self.population]
         return np.std(specimenValues)
 
     def applySelection(self):
@@ -99,7 +101,8 @@ class AckleyOptimizer:
             bestSpecimen = self.getBestOfGeneration()
             mean = self.getMeanOfGeneration()
             std = self.getStdOfGeneration()
-            best.append(bestSpecimen)
+            sign = 1 if GC.config.kind == 0 else -1
+            best.append(sign*bestSpecimen.value)
             means.append(mean)
             stds.append(std)
         return best, means, stds
@@ -112,7 +115,8 @@ class AckleyOptimizer:
             stds = []
 
             xmlFile = XmlFileWriter()
-            xmlFile.xmlStart(GC.config)
+            xmlFile.xmlStart()
+            xmlFile.addConfig(GC.config)
             xmlFile.openGenerationsTag()
             for i in range(GC.config.generations):
                 newpop = self.lifecycle()
@@ -121,7 +125,8 @@ class AckleyOptimizer:
                 bestSpecimen = self.getBestOfGeneration()
                 mean = self.getMeanOfGeneration()
                 std = self.getStdOfGeneration()
-                best.append(bestSpecimen)
+                sign = 1 if GC.config.kind == 0 else -1
+                best.append(sign*bestSpecimen.value)
                 means.append(mean)
                 stds.append(std)
             xmlFile.closeGenerationsTag()

@@ -2,13 +2,14 @@ from Gui.AbstractSimpleGuiElement import AbstractSimpleGuiElement
 import PySimpleGUI as sg
 import GC
 from Config import OutputConfig
+from XmlFile import exportConfig
 
 class SimpleGuiMenuBar(AbstractSimpleGuiElement):
 
     def __init__(self):
         self.setSgClass(sgclass=sg.Menu)
         definition = [
-            ['Opcje', ['Ustawienia wyjścia', 'Exit',]],
+            ['Opcje', ['Ustawienia wyjścia', 'Zapisz konfigurację', 'Exit',]],
             ['Informacje', 'O programie'],
         ]
         self.setDefinition(definition)
@@ -21,6 +22,8 @@ class SimpleGuiMenuBar(AbstractSimpleGuiElement):
             sg.popup('Projekt 1 Obliczenia Ewolucyjne 2020', title="Informacja")
         elif signal == 'Exit':
             args[0] = sg.WINDOW_CLOSED
+        elif signal == 'Zapisz konfigurację':
+            args[0] = 'EXPORT_CONFIG'
         elif signal == 'Ustawienia wyjścia':
             layout = [
                 [sg.Checkbox('Eksportuj wynik do XML', key='_EXPORT_XML_', default=GC.config.outputConfig.exportToFile)],
