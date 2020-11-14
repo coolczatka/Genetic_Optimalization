@@ -8,7 +8,7 @@ class FunctionParameters:
 class Config:
     #kind 0 - minimalization 1 - maximalization
     def __init__(self, generations, chromosomeConfig, kind=0, searchRange=(-30, 30), populationSize=500, selection=0, precision=6,
-                  fp = FunctionParameters(20, 0.4, 2*pi), selectionParameter = 10, elitePercent=10):
+                  fp = FunctionParameters(20, 0.2, 2*pi), selectionParameter = 10, elitePercent=10):
         self.generations = generations
         self.kind = kind
         self.range = searchRange
@@ -45,6 +45,7 @@ class ChromosomeConfig:
         self.ip = ip
 
 class OutputConfig:
-    def __init__(self, exportToFile = True, savePlots = True):
+    def __init__(self, exportToFile = True, savePlots = True, npfes = False):
         self.exportToFile = exportToFile
         self.savePlots = savePlots
+        self.newPlotForEachStart = npfes

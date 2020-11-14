@@ -25,6 +25,8 @@ class SimpleGuiMenuBar(AbstractSimpleGuiElement):
             layout = [
                 [sg.Checkbox('Eksportuj wynik do XML', key='_EXPORT_XML_', default=GC.config.outputConfig.exportToFile)],
                 [sg.Checkbox('Zapisz wykresy', key='_SAVE_PLOTS_', default=GC.config.outputConfig.savePlots)],
+                [sg.Checkbox('Nowy wykres dla każdego startu', key='_NPFES_', default=GC.config.outputConfig.newPlotForEachStart)],
+
                 [sg.Button('Zapisz', key='_SAVE_SETTINGS_')]
             ]
             optionWindow = sg.Window('Ustawienia wyjścia', layout, size=(400, 300))
@@ -34,7 +36,7 @@ class SimpleGuiMenuBar(AbstractSimpleGuiElement):
                 if event == sg.WINDOW_CLOSED:
                     break
                 elif event == '_SAVE_SETTINGS_':
-                    oc = OutputConfig(values['_EXPORT_XML_'], values['_SAVE_PLOTS_'])
+                    oc = OutputConfig(values['_EXPORT_XML_'], values['_SAVE_PLOTS_'], values['_NPFES_'])
                     GC.config.outputConfig = oc
                     break
             optionWindow.close()

@@ -3,6 +3,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
 import PySimpleGUI as sg
 import matplotlib
+import GC
 
 from Gui.AbstractSimpleGuiElement import AbstractSimpleGuiElement
 
@@ -11,14 +12,14 @@ class Plotter(AbstractSimpleGuiElement):
     def processSignals(self, args):
         pass
 
-    def __init__(self):
+    def __init__(self, key):
         matplotlib.use('TkAgg')
         self.setSgClass(sgclass=None)
         definition = [sg.Column(
             layout=[
-                [sg.Canvas(key='fig_cv',
+                [sg.Canvas(key=key,
                            # it's important that you set this size
-                           size=(400 * 2, 400)
+                           size=(400 * 2, 600)
                           )]
                 ],
                 background_color='#DAE0E6',
@@ -35,7 +36,7 @@ class Plotter(AbstractSimpleGuiElement):
 
     @staticmethod
     def best_by_generations_plot(x, y):
-        plt.figure(1)
+        plt.figure() if GC.config.outputConfig.newPlotForEachStart else plt.figure(1)
         fig = plt.gcf()
         DPI = fig.get_dpi()
         #fig.set_size_inches(404 * 2 / float(DPI), 404 / float(DPI))
@@ -45,13 +46,13 @@ class Plotter(AbstractSimpleGuiElement):
         plt.title("Best of generation by generations")
         plt.xlabel('X')
         plt.ylabel('Y')
-        plt.grid()
+        plt.grid(True)
         
         return fig
 
     @staticmethod
     def mean_plot(x, y):
-        plt.figure(1)
+        plt.figure() if GC.config.outputConfig.newPlotForEachStart else plt.figure(2)
         fig = plt.gcf()
         DPI = fig.get_dpi()
         # fig.set_size_inches(404 * 2 / float(DPI), 404 / float(DPI))
@@ -61,13 +62,13 @@ class Plotter(AbstractSimpleGuiElement):
         plt.title("Mean of population")
         plt.xlabel('Mean')
         plt.ylabel('Generation')
-        plt.grid()
+        plt.grid(True)
 
         return fig
 
     @staticmethod
     def std_plot(x, y):
-        plt.figure(1)
+        plt.figure() if GC.config.outputConfig.newPlotForEachStart else plt.figure(3)
         fig = plt.gcf()
         DPI = fig.get_dpi()
         # fig.set_size_inches(404 * 2 / float(DPI), 404 / float(DPI))
@@ -77,7 +78,7 @@ class Plotter(AbstractSimpleGuiElement):
         plt.title("Std of population")
         plt.xlabel('Std')
         plt.ylabel('Generation')
-        plt.grid()
+        plt.grid(True)
 
         return fig
 
