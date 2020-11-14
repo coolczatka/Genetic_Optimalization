@@ -83,7 +83,7 @@ class AckleyOptimizer:
 
     def runGenerations(self):
         best = []
-        for i in range(self.config.generations):
+        for i in range(GC.config.generations):
             newpop = self.lifecycle()
             self.population = newpop
             bestSpecimen = self.getBestOfGeneration()

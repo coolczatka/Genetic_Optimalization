@@ -1,11 +1,11 @@
 import numpy as np
 import math
+import GC
 
 class Specimen:
-    def __init__(self, genome, value, config):
+    def __init__(self, genome, value):
         self.genome = genome
         self.value = value
-        self.config = config
 
     def __str__(self):
 
@@ -37,8 +37,8 @@ class Specimen:
         #print(val2)
         #print(genome2[1])
 
-        newSpec1 = Specimen(genome1, self.ackley(val1), self.config)
-        newSpec2 = Specimen(genome2, self.ackley(val2), self.config)
+        newSpec1 = Specimen(genome1, self.ackley(val1))
+        newSpec2 = Specimen(genome2, self.ackley(val2))
         return newSpec1, newSpec2
 
     def setGene(self, gene, pos):
@@ -46,5 +46,5 @@ class Specimen:
 
     def ackley(self, X):
         X = np.array(X)
-        return -self.config.functionParameters.a * math.exp(-self.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
-               -math.exp(sum([math.cos(self.config.functionParameters.c*x) for x in X])/len(X)) + self.config.functionParameters.a + math.e
+        return -GC.config.functionParameters.a * math.exp(-GC.config.functionParameters.b * math.sqrt(sum(X**2)/len(X)))\
+               -math.exp(sum([math.cos(GC.config.functionParameters.c*x) for x in X])/len(X)) + GC.config.functionParameters.a + math.e

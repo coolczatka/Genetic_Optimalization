@@ -6,9 +6,10 @@ from Config import Config, ChromosomeConfig
 from AckleyOptimizer import AckleyOptimizer
 # Define the window's contents
 from Gui.Plotter import Plotter
-
+import GC
 
 class Gui:
+
     def __init__(self):
         menubar = SimpleGuiMenuBar()
         self.plotter = Plotter()
@@ -16,6 +17,7 @@ class Gui:
 
         self.components = [
             menubar,
+            functionParameters
 
         ]
         self.layout = [
@@ -32,31 +34,32 @@ class Gui:
         # Create the window
         #window = sg.Window('Window Title', layout, no_titlebar=True, location=(0, 0), size=(800, 600), keep_on_top=True)
         sg.theme('DarkAmber')
-        window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(800, 600))
+        GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(800, 600))
 
         # Display and interact with the Window using an Event Loop
         while True:
-            event, values = window.read()
+            event, values = GC.window.read()
             args = [event, values]
             # See if user wants to quit or window was closed
             for i in self.components:
+                print(args)
                 i.processSignals(args)
             if args[0] == 'START':
-                config = self.makeConfig(args[1])
-                aopt = AckleyOptimizer(config)
+                GC.config = self.makeConfig(args[1])
+                aopt = AckleyOptimizer()
                 #aopt.run()
                 best = aopt.runGenerations()
                 best_values = [b.value for b in best]
-                x = range(config.generations)
+                x = range(GC.config.generations)
                 figure = self.plotter.best_by_generations_plot(x, best_values)
-                self.plotter.draw_figure_(window['fig_cv'].TKCanvas, figure)
+                self.plotter.draw_figure_(GC.window['fig_cv'].TKCanvas, figure)
             if args[0] == sg.WINDOW_CLOSED:
                 break
             # Output a message to the window
            # window['-OUTPUT-'].update('Hello ' + values['-INPUT-'] + "! Thanks for trying PySimpleGUI")
 
         # Finish up by removing from the screen
-        window.close()
+        GC.window.close()
 
     def adaptLayout(self):
         for i in range(len(self.layout)):
@@ -85,5 +88,7 @@ class Gui:
             populationSize=int(values['_POPULATIONSIZE_']),
             selection=FunctionParametersInputs.signalMapping()['SELECTION'][values['_SELECTION_']],
             precision=int(values['_PRECISION_']),
+            selectionParameter=float(values['_SELECTIONPARAMETER_']),
+            elitePercent=float(values['_ELITE_PERCENT_'])
         )
         return config

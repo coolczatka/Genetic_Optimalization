@@ -99,7 +99,7 @@ class ClassicalGene(AbstractChromosome):
 
     @staticmethod
     def createFromChromosomeString(string, range, precision, chromosomeConfig):
-        cc = ClassicalGene(range, precision, chromosomeConfig)
+        cc = ClassicalGene(range, precision)
         cc.bitString = string
         return cc
 

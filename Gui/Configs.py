@@ -1,6 +1,7 @@
 from Gui.AbstractSimpleGuiElement import AbstractSimpleGuiElement
 import PySimpleGUI as sg
 import math
+import GC
 
 class FunctionParametersInputs(AbstractSimpleGuiElement):
     @staticmethod
@@ -10,6 +11,14 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
             'MK': {'BRAK': 0, 'BRZEGOWA': 1, 'JEDNOPUNKTOWA': 2, 'DWUPUNKTOWA': 3},
             'KIND': {'MINIMALIZACJA': 0, 'MAKSYMALIZACJA': 1},
             'SELECTION': {'PROCENT NAJLEPSZYCH':0, 'TURNIEJOWA': 1, 'RANKINGOWA': 2, 'KOLEM RULETKI': 3}
+        }
+    @staticmethod
+    def parameterName():
+        return {
+            'PROCENT NAJLEPSZYCH': 'Procent najlepszych',
+            'TURNIEJOWA': 'Ilość uczestników turnieju',
+            'RANKINGOWA': '',
+            'KOLEM RULETKI': ''
         }
     def __init__(self):
         self.setSgClass(sgclass=None)
@@ -27,9 +36,12 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
                     [sg.Text('Ilość generacji'), sg.Input(key='_GENERATIONS_', enable_events=True, default_text="1000", size=(20,1))],
                     [sg.Text('Wielkość populacji'), sg.Input(key='_POPULATIONSIZE_', enable_events=True, default_text="500", size=(20,1))],
                     [sg.Text('Rodzaj'), sg.Combo(list(FunctionParametersInputs.signalMapping()['KIND'].keys()), default_value='MINIMALIZACJA', key='_KIND_', enable_events=True, size=(20,1))],
-                    [sg.Text('Selekcja'), sg.Combo(list(FunctionParametersInputs.signalMapping()['SELECTION'].keys()), default_value='PROCENT NAJLEPSZYCH', key='_SELECTION_', enable_events=True, size=(25,1))],
                     [sg.Text('Dokładność'), sg.Input(key='_PRECISION_', enable_events=True, default_text="6", size=(20,1))],
                     [sg.Text('Zakres'), sg.Input(key='_RANGE_', enable_events=True, default_text="-10,10", size=(20,1))],
+                    [sg.Text('Selekcja'), sg.Combo(list(FunctionParametersInputs.signalMapping()['SELECTION'].keys()),default_value='PROCENT NAJLEPSZYCH', key='_SELECTION_', enable_events=True, size=(25, 1))],
+                    [sg.Text('Procent elity'), sg.Input(key='_ELITE_PERCENT_', enable_events=True, default_text="10", size=(20,1))],
+
+                    [sg.Text('Procent najlepszych', key='_SP_LABEL_'), sg.Input(key='_SELECTIONPARAMETER_', enable_events=True, default_text="10", size=(20,1))],
                 ]),
                 sg.Column([
                     [sg.Text('Konfiguracja chromosomów')],
@@ -60,10 +72,16 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
     def processSignals(self, args):
         event = args[0]
         values = args[1]
-        global window
+
         if event == '_PARAMETER_A_' and values['_PARAMETER_A_'] and values['_PARAMETER_A_'][-1] not in ('0123456789.'):
-            window['_PARAMETER_A_'].update(values['_PARAMETER_A_'][:-1])
+            GC.window['_PARAMETER_A_'].update(values['_PARAMETER_A_'][:-1])
         elif event == '_PARAMETER_B_' and values['_PARAMETER_B_'] and values['_PARAMETER_B_'][-1] not in ('0123456789.'):
-            window['_PARAMETER_B_'].update(values['_PARAMETER_B_'][:-1])
+            GC.window['_PARAMETER_B_'].update(values['_PARAMETER_B_'][:-1])
         elif event == '_PARAMETER_C_' and values['_PARAMETER_C_'] and values['_PARAMETER_C_'][-1] not in ('0123456789.'):
-            window['_PARAMETER_C_'].update(values['_PARAMETER_C_'][:-1])
+            GC.window['_PARAMETER_C_'].update(values['_PARAMETER_C_'][:-1])
+        elif event == '_SELECTION_':
+            label = FunctionParametersInputs.parameterName()[values['_SELECTION_']]
+            visible = True if len(label) > 0 else False
+            GC.window['_SP_LABEL_'].update(label, visible=visible)
+            #GC.window['_SELECTIONPARAMETER_'].update(visible=visible)
+

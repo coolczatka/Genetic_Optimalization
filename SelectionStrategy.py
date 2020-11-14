@@ -5,7 +5,7 @@ import GC
 class SelectionStrategy:
 
     def best(self, population):
-        specimens_to_cross = self.getBest(population, GC.config.winnersPercent)
+        specimens_to_cross = self.getBest(population, GC.config.selectionParameter)
 
         return specimens_to_cross
 
@@ -21,7 +21,7 @@ class SelectionStrategy:
         return best
 
     def tournament(self, population):
-        n = GC.config.winnersPercent
+        n = GC.config.selectionParameter
         tournaments = self.divide_for_tournaments(n, population)
         winners = []
         for tournament in tournaments:
