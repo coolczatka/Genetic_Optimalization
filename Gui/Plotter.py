@@ -60,8 +60,8 @@ class Plotter(AbstractSimpleGuiElement):
         # y = np.sin(x)
         plt.plot(x, y)  # y best values, x - number of generation
         plt.title("Mean of population")
-        plt.xlabel('Mean')
-        plt.ylabel('Generation')
+        plt.xlabel('Generation')
+        plt.ylabel('Mean')
         plt.grid(True)
 
         return fig
@@ -76,8 +76,8 @@ class Plotter(AbstractSimpleGuiElement):
         # y = np.sin(x)
         plt.plot(x, y)  # y best values, x - number of generation
         plt.title("Std of population")
-        plt.xlabel('Std')
-        plt.ylabel('Generation')
+        plt.xlabel('Generation')
+        plt.ylabel('Std')
         plt.grid(True)
 
         return fig
