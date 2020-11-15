@@ -107,7 +107,7 @@ class AckleyOptimizer:
 
     def run(self):
         best = []
-        if(GC.config.outputConfig.exportToFile):
+        if bool(GC.config.outputConfig.exportToFile) == True:
             best = []
             means = []
             stds = []

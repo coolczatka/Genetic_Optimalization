@@ -10,6 +10,7 @@ import GC
 from datetime import datetime
 from time import time
 from XmlFile import exportConfig
+import os
 class Gui:
 
     def __init__(self):
@@ -53,6 +54,13 @@ class Gui:
                 exportConfig(GC.config)
             if args[0] == 'START':
                 GC.config = self.makeConfig(args[1])
+
+                folder = 'datasets'
+                extension = '.png'
+
+                if (GC.config.outputConfig.savePlots or GC.config.outputConfig.exportToFile) and not os.path.exists(folder):
+                    os.makedirs(folder)
+
                 aopt = AckleyOptimizer()
                 startTime = time()
                 best_values, means, stds = aopt.run()
@@ -61,18 +69,15 @@ class Gui:
                 label = 'Czas wykonania: ' + str(round(duration, 2)) + 's'
                 GC.window['_TIME_LABEL_'].update(label)
 
-                folder = 'datasets/'
-                extension = '.png'
-
                 now = datetime.now()
-                prefix = folder + now.date().__str__() + f'_{now.hour}_{now.minute}_{now.second}'
+                prefix = folder + '/' + now.date().__str__() + f'_{now.hour}_{now.minute}_{now.second}'
 
                 x = range(GC.config.generations)
                 bestFigure = self.bestPlotter.best_by_generations_plot(x, best_values)
                 meanFigure = self.meanPlotter.mean_plot(x, means)
                 stdFigure = self.stdPlotter.std_plot(x, stds)
 
-                if(GC.config.outputConfig.savePlots):
+                if(bool(GC.config.outputConfig.savePlots) == True):
                     bestFigure.savefig(prefix+'_best'+extension)
                     meanFigure.savefig(prefix+'_mean'+extension)
                     stdFigure.savefig(prefix+'_std'+extension)
