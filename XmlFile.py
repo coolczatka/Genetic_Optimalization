@@ -126,7 +126,6 @@ class XmlFileReader:
             elitePercent=elitePercent
         )
         config.outputConfig = oc
-        print(config.kind)
         return config
 
 def exportConfig(config):

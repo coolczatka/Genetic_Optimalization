@@ -16,7 +16,7 @@ class Config:
         self.chConfig = chromosomeConfig
         self.precision = precision
         #TODO config strategii czy zrobić nową klasę
-        #0 - procent najlepszych 1 - turniejowa 2 - rankingowa 3 - kołem ruletki
+        #0 - procent najlepszych 1 - turniejowa 3 - kołem ruletki
         self.selection = selection
         self.selectionParameter = selectionParameter # procent najlepszych / ilosc osobnikow w turnieju
         self.elitePercent = elitePercent
@@ -37,9 +37,10 @@ class ChromosomeConfig:
         self.mk = mk
         self.mp = mp
         # 0 - brak
-        # 1 - jednopunktowe settrings
+        # 1 - jednopunktowe
         # 2 - dwupunktowe
-        # 3 - jednorodna
+        # 3 - trzypunktowa
+        # 4 - jednorodna
         self.ck = ck
         self.cp = cp
         self.ip = ip

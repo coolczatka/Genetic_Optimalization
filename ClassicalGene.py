@@ -53,6 +53,18 @@ class ClassicalGene(AbstractChromosome):
             newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
             newChromosomeString = newChromosomeString + self.bitString[point2:]
         elif GC.config.chConfig.ck == 3:
+            point1 = randint(1, len(self.bitString) - 1)
+            point2 = randint(1, len(self.bitString) - 1)
+            point3 = randint(1, len(self.bitString) - 1)
+            while point2 == point1:
+                point2 = randint(1, len(self.bitString) - 1)
+            while point3 == point2 or point3 == point1:
+                point3 = randint(1, len(self.bitString) - 1)
+            point1, point2, point3 = sorted([point1, point2, point3])
+            newChromosomeString = self.bitString[:point1]
+            newChromosomeString = newChromosomeString + chromB.bitString[point1:point2]
+            newChromosomeString = newChromosomeString + self.bitString[point2:]
+        elif GC.config.chConfig.ck == 4:
             for i in range(len(self.bitString)):
                 if(i % 2 == 0):
                     newChromosomeString = newChromosomeString + self.bitString[i]

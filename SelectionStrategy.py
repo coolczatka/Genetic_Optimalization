@@ -52,8 +52,5 @@ class SelectionStrategy:
             tournaments.append(t)
         return tournaments
 
-    def ranking(self):  # nie wiem jakie parametry
-        pass
-
     def rouletteWheel(self):  # trzeba znormalizowc
         pass
