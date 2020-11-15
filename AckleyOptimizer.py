@@ -48,17 +48,15 @@ class AckleyOptimizer:
 
     def applySelection(self):
         selection_strategy = SelectionStrategy()
+        mating_set = []
         if GC.config.selection == 0:
-            matingSet = selection_strategy.best(self.population)
-            weights = [1 for m in matingSet]
+            mating_set = selection_strategy.best(self.population)
         elif GC.config.selection == 1:
-            matingSet = selection_strategy.tournament(self.population)
-            weights = [1 for m in matingSet]
-        elif GC.config.selection == 2:
-            pass
+            mating_set = selection_strategy.tournament(self.population)
         elif GC.config.selection == 3:
-            pass
-        return matingSet, weights
+            mating_set = selection_strategy.rouletteWheel(self.population)
+        weights = [1 for m in mating_set]
+        return mating_set, weights
 
     def lifecycle(self):
         newPopulation = []
