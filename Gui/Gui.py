@@ -30,7 +30,9 @@ class Gui:
             [menubar.getInstance()],
             [functionParameters.getInstance()],
             [sg.Button('START'), sg.Text('Czas wykonania: ', size=(20,1), font="Helvetica 10", key='_TIME_LABEL_'),
-              sg.Text('Wykres: '), sg.Combo(list(FunctionParametersInputs.signalMapping()['PLOT_TYPE'].keys()),default_value='NAJLEPSZY Z POPULACJI W GENERACJI', key='_PLOT_', enable_events=True)],
+              sg.Text('Wykres: '), sg.Combo(list(FunctionParametersInputs.signalMapping()['PLOT_TYPE'].keys()),default_value='NAJLEPSZY Z POPULACJI W GENERACJI', key='_PLOT_', enable_events=True),
+             sg.Text(' ', size=(18, 1), font="Helvetica 10", key='_BEST_RESULT_X_'),
+             sg.Text(' ', size=(18, 1), font="Helvetica 10", key='_BEST_RESULT_Y_')],
             [self.bestPlotter.getInstance()]
         ]
 
@@ -41,7 +43,7 @@ class Gui:
         # Create the window
         #window = sg.Window('Window Title', layout, no_titlebar=True, location=(0, 0), size=(800, 600), keep_on_top=True)
         sg.theme('DarkAmber')
-        GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(800, 650))
+        GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(900, 750))
 
         # Display and interact with the Window using an Event Loop
         while True:
@@ -65,12 +67,15 @@ class Gui:
 
                 aopt = AckleyOptimizer()
                 startTime = time()
-                best_values, means, stds = aopt.run()
+                best_values, means, stds, coords = aopt.run()
                 endTime = time()
                 duration = endTime-startTime
                 label = 'Czas wykonania: ' + str(round(duration, 2)) + 's'
                 GC.window['_TIME_LABEL_'].update(label)
-
+                label = 'X: ' + str(round(coords[-1][0], GC.config.precision+1))
+                GC.window['_BEST_RESULT_X_'].update(label)
+                label = 'Y: ' + str(round(coords[-1][1], GC.config.precision+1))
+                GC.window['_BEST_RESULT_Y_'].update(label)
                 now = datetime.now()
                 prefix = folder + '/' + now.date().__str__() + f'_{now.hour}_{now.minute}_{now.second}'
 

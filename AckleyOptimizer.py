@@ -93,6 +93,7 @@ class AckleyOptimizer:
         best = []
         means = []
         stds = []
+        coords = []
         for i in range(GC.config.generations):
             newpop = self.lifecycle()
             self.population = newpop
@@ -100,10 +101,11 @@ class AckleyOptimizer:
             mean = self.getMeanOfGeneration()
             std = self.getStdOfGeneration()
             sign = 1 if GC.config.kind == 0 else -1
+            coords.append([bestSpecimen.genome[0].getValueFromBitString(), bestSpecimen.genome[1].getValueFromBitString()])
             best.append(sign*bestSpecimen.value)
             means.append(mean)
             stds.append(std)
-        return best, means, stds
+        return best, means, stds, coords
 
     def run(self):
         best = []
@@ -111,7 +113,7 @@ class AckleyOptimizer:
             best = []
             means = []
             stds = []
-
+            coords = []
             xmlFile = XmlFileWriter()
             xmlFile.xmlStart()
             xmlFile.addConfig(GC.config)
@@ -124,12 +126,13 @@ class AckleyOptimizer:
                 mean = self.getMeanOfGeneration()
                 std = self.getStdOfGeneration()
                 sign = 1 if GC.config.kind == 0 else -1
+                coords.append([bestSpecimen.genome[0].getValueFromBitString(), bestSpecimen.genome[1].getValueFromBitString()])
                 best.append(sign*bestSpecimen.value)
                 means.append(mean)
                 stds.append(std)
             xmlFile.closeGenerationsTag()
             xmlFile.xmlEnd()
-            return best, means, stds
+            return best, means, stds, coords
         else:
             return self.runGenerations()
 
