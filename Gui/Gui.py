@@ -41,7 +41,7 @@ class Gui:
         # Create the window
         #window = sg.Window('Window Title', layout, no_titlebar=True, location=(0, 0), size=(800, 600), keep_on_top=True)
         sg.theme('DarkAmber')
-        GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(800, 600))
+        GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(800, 650))
 
         # Display and interact with the Window using an Event Loop
         while True:
@@ -89,10 +89,10 @@ class Gui:
                     self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, bestFigure)
                 elif plot_type == 'SREDNIA Z POPULACJI W GENERACJI':
                     self.layout[3] = self.meanPlotter.getInstance()
-                    self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, meanFigure)
+                    self.meanPlotter.draw_figure_(GC.window['best'].TKCanvas, meanFigure)
                 elif plot_type == 'ODCHYLENIE STANDARDOWE W GENERACJI':
                     self.layout[3] = self.stdPlotter.getInstance()
-                    self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, stdFigure)
+                    self.stdPlotter.draw_figure_(GC.window['best'].TKCanvas, stdFigure)
             if args[0] == sg.WINDOW_CLOSED:
                 break
             # Output a message to the window
