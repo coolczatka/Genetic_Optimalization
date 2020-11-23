@@ -29,7 +29,8 @@ class Gui:
         self.layout = [
             [menubar.getInstance()],
             [functionParameters.getInstance()],
-            [sg.Button('START'), sg.Text('Czas wykonania: ', size=(20,1), font="Helvetica 10", key='_TIME_LABEL_')],
+            [sg.Button('START'), sg.Text('Czas wykonania: ', size=(20,1), font="Helvetica 10", key='_TIME_LABEL_'),
+              sg.Text('Wykres: '), sg.Combo(list(FunctionParametersInputs.signalMapping()['PLOT_TYPE'].keys()),default_value='NAJLEPSZY Z POPULACJI W GENERACJI', key='_PLOT_', enable_events=True)],
             [self.bestPlotter.getInstance()]
         ]
 
@@ -53,6 +54,7 @@ class Gui:
                 GC.config = self.makeConfig(values)
                 exportConfig(GC.config)
             if args[0] == 'START':
+                plot_type = args[1]['_PLOT_']
                 GC.config = self.makeConfig(args[1])
 
                 folder = 'datasets'
@@ -82,7 +84,15 @@ class Gui:
                     meanFigure.savefig(prefix+'_mean'+extension)
                     stdFigure.savefig(prefix+'_std'+extension)
 
-                self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, bestFigure)
+                if plot_type == 'NAJLEPSZY Z POPULACJI W GENERACJI':
+                    self.layout[3] = self.bestPlotter.getInstance()
+                    self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, bestFigure)
+                elif plot_type == 'SREDNIA Z POPULACJI W GENERACJI':
+                    self.layout[3] = self.meanPlotter.getInstance()
+                    self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, meanFigure)
+                elif plot_type == 'ODCHYLENIE STANDARDOWE W GENERACJI':
+                    self.layout[3] = self.stdPlotter.getInstance()
+                    self.bestPlotter.draw_figure_(GC.window['best'].TKCanvas, stdFigure)
             if args[0] == sg.WINDOW_CLOSED:
                 break
             # Output a message to the window

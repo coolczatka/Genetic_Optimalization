@@ -9,7 +9,8 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
             'CK': {'BRAK': 0, 'JEDNOPUNKTOWE': 1, 'DWUPUNKTOWE': 2, 'TRZYPUNKTOWE': 3, 'JEDNORODNE': 4},
             'MK': {'BRAK': 0, 'BRZEGOWA': 1, 'JEDNOPUNKTOWA': 2, 'DWUPUNKTOWA': 3},
             'KIND': {'MINIMALIZACJA': 0, 'MAKSYMALIZACJA': 1},
-            'SELECTION': {'PROCENT NAJLEPSZYCH':0, 'TURNIEJOWA': 1, 'KOLEM RULETKI': 3}
+            'SELECTION': {'PROCENT NAJLEPSZYCH':0, 'TURNIEJOWA': 1, 'KOLEM RULETKI': 3},
+            'PLOT_TYPE': {'NAJLEPSZY Z POPULACJI W GENERACJI':0, 'SREDNIA Z POPULACJI W GENERACJI':1, 'ODCHYLENIE STANDARDOWE W GENERACJI':2}
         }
     @staticmethod
     def parameterName():
