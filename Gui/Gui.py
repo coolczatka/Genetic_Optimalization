@@ -20,7 +20,7 @@ class Gui:
         self.stdPlotter = Plotter('std')
 
         functionParameters = FunctionParametersInputs()
-
+        realrepresentation = RealRepresentationParameters()
         self.components = [
             menubar,
             functionParameters
@@ -35,15 +35,19 @@ class Gui:
              sg.Text(' ', size=(18, 1), font="Helvetica 10", key='_BEST_RESULT_Y_')],
             [self.bestPlotter.getInstance()]
         ]
-
+        self.realRLayout = self.layout
+        self.realRLayout[1] = [realrepresentation.getInstance()]
+        self.chooseLayout = [
+            [sg.Combo(['KLASYCZNY', 'RZECZYWISTY'], default_value='RZECZYWISTY', key='_ALGHORITM_', enable_events=True, size=(20,1)), sg.Button('Zatwierdz')]
+        ]
         self.adaptLayout()
 
     def run(self):
-
+        startLayout = self.chooseLayout
         # Create the window
         #window = sg.Window('Window Title', layout, no_titlebar=True, location=(0, 0), size=(800, 600), keep_on_top=True)
         sg.theme('DarkAmber')
-        GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(900, 750))
+        GC.window = sg.Window('Optymalizacja funkcji Ackleya', startLayout, size=(300, 150))
 
         # Display and interact with the Window using an Event Loop
         while True:
@@ -98,6 +102,13 @@ class Gui:
                 elif plot_type == 'ODCHYLENIE STANDARDOWE W GENERACJI':
                     self.layout[3] = self.stdPlotter.getInstance()
                     self.stdPlotter.draw_figure_(GC.window['best'].TKCanvas, stdFigure)
+            if args[0] == 'Zatwierdz':
+                GC.alghoritm = values['_ALGHORITM_']
+                GC.window.close()
+                if(GC.alghoritm == 'KLASYCZNY'):
+                    GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.layout, size=(900, 750))
+                elif GC.alghoritm == 'RZECZYWISTY':
+                    GC.window = sg.Window('Optymalizacja funkcji Ackleya', self.realRLayout, size=(900, 750))
             if args[0] == sg.WINDOW_CLOSED:
                 break
             # Output a message to the window
@@ -117,25 +128,49 @@ class Gui:
                     index+=1
 
     def makeConfig(self, values):
-        chromosomeConfig = ChromosomeConfig(
-            mk=FunctionParametersInputs.signalMapping()['MK'][values['_MK_']],
-            mp=float(values['_MP_']),
-            ck=FunctionParametersInputs.signalMapping()['CK'][values['_CK_']],
-            cp=float(values['_CP_']),
-            ip=float(values['_IP_'])
-        )
-        oc = GC.config.outputConfig
-        minRange, maxRange = values['_RANGE_'].split(',')
-        config = Config(
-            generations=int(values['_GENERATIONS_']),
-            chromosomeConfig=chromosomeConfig,
-            kind=FunctionParametersInputs.signalMapping()['KIND'][values['_KIND_']],
-            searchRange=(float(minRange), float(maxRange)),
-            populationSize=int(values['_POPULATIONSIZE_']),
-            selection=FunctionParametersInputs.signalMapping()['SELECTION'][values['_SELECTION_']],
-            precision=int(values['_PRECISION_']),
-            selectionParameter=float(values['_SELECTIONPARAMETER_']),
-            elitePercent=float(values['_ELITE_PERCENT_']),
-        )
-        config.outputConfig = oc
+        config = []
+        if GC.alghoritm == 'KLASYCZNY':
+            chromosomeConfig = ChromosomeConfig(
+                mk=FunctionParametersInputs.signalMapping()['MK'][values['_MK_']],
+                mp=float(values['_MP_']),
+                ck=FunctionParametersInputs.signalMapping()['CK'][values['_CK_']],
+                cp=float(values['_CP_']),
+                ip=float(values['_IP_'])
+            )
+            oc = GC.config.outputConfig
+            minRange, maxRange = values['_RANGE_'].split(',')
+            config = Config(
+                generations=int(values['_GENERATIONS_']),
+                chromosomeConfig=chromosomeConfig,
+                kind=FunctionParametersInputs.signalMapping()['KIND'][values['_KIND_']],
+                searchRange=(float(minRange), float(maxRange)),
+                populationSize=int(values['_POPULATIONSIZE_']),
+                selection=FunctionParametersInputs.signalMapping()['SELECTION'][values['_SELECTION_']],
+                precision=int(values['_PRECISION_']),
+                selectionParameter=float(values['_SELECTIONPARAMETER_']),
+                elitePercent=float(values['_ELITE_PERCENT_']),
+            )
+            config.outputConfig = oc
+        elif GC.alghoritm == 'RZECZYWISTY':
+            chromosomeConfig = ChromosomeConfig(
+                mk=RealRepresentationParameters.signalMapping()['MK'][values['_MK_']],
+                mp=float(values['_MP_']),
+                ck=RealRepresentationParameters.signalMapping()['CK'][values['_CK_']],
+                cp=float(values['_CP_']),
+                ip=float(values['_IP_'])
+            )
+            oc = GC.config.outputConfig
+            minRange, maxRange = values['_RANGE_'].split(',')
+            config = Config(
+                generations=int(values['_GENERATIONS_']),
+                chromosomeConfig=chromosomeConfig,
+                kind=RealRepresentationParameters.signalMapping()['KIND'][values['_KIND_']],
+                searchRange=(float(minRange), float(maxRange)),
+                populationSize=int(values['_POPULATIONSIZE_']),
+                selection=RealRepresentationParameters.signalMapping()['SELECTION'][values['_SELECTION_']],
+                precision=int(values['_PRECISION_']),
+                selectionParameter=float(values['_SELECTIONPARAMETER_']),
+                elitePercent=float(values['_ELITE_PERCENT_']),
+            )
+            config.outputConfig = oc
         return config
