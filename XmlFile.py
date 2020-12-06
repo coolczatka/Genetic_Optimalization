@@ -52,7 +52,7 @@ class XmlFileWriter:
             individualXml = '<specimen>'
             individualXml += f'<value>{sign*specimen.value}</value>'
             for i, gene in enumerate(specimen.genome):
-                individualXml += f'<gene position="{i}"><bitvalue>{gene.bitString}</bitvalue><value>{gene.getValueFromBitString()}</value></gene>'
+                individualXml += f'<gene position="{i}"><value>{gene.getValueFromBitString()}</value></gene>'
             individualXml += '</specimen>'
             self.file.write(individualXml)
         self.file.write('</generation>')

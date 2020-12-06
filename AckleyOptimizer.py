@@ -84,7 +84,7 @@ class AckleyOptimizer:
             for j in range(len(newPopulation[i].genome)):
                 x = newPopulation[i].genome[j]
                 x = x.mutate()
-                x = x.invert()
+                #x = x.invert()
                 newPopulation[i].genome[j] = x
 
         return newPopulation

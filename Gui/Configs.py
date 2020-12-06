@@ -6,8 +6,8 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
     @staticmethod
     def signalMapping():
         return {
-            'CK': {'BRAK': 0, 'JEDNOPUNKTOWE': 1, 'DWUPUNKTOWE': 2, 'TRZYPUNKTOWE': 3, 'JEDNORODNE': 4},
-            'MK': {'BRAK': 0, 'BRZEGOWA': 1, 'JEDNOPUNKTOWA': 2, 'DWUPUNKTOWA': 3},
+            'CK': {'BRAK': 0, 'ARYTMETYCZNE': 1, 'HEURYSTYCZNE': 2},
+            'MK': {'BRAK': 0, 'RÓWNOMIERNA': 1},
             'KIND': {'MINIMALIZACJA': 0, 'MAKSYMALIZACJA': 1},
             'SELECTION': {'PROCENT NAJLEPSZYCH':0, 'TURNIEJOWA': 1, 'KOLEM RULETKI': 3},
             'PLOT_TYPE': {'NAJLEPSZY Z POPULACJI W GENERACJI':0, 'SREDNIA Z POPULACJI W GENERACJI':1, 'ODCHYLENIE STANDARDOWE W GENERACJI':2}
@@ -61,9 +61,6 @@ class FunctionParametersInputs(AbstractSimpleGuiElement):
                               enable_events=True, size=(20, 1))],
                     [sg.Text('Prawdopodobienstwo mutacji'),
                      sg.Input(key='_MP_', enable_events=True, default_text=str(GC.config.chConfig.mp), size=(20, 1))],
-
-                    [sg.Text('Prawdopodobienstwo inwersji'),
-                     sg.Input(key='_IP_', enable_events=True, default_text=str(GC.config.chConfig.ip), size=(20, 1))],
                 ]),
             ],
         ]

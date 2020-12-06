@@ -122,7 +122,6 @@ class Gui:
             mp=float(values['_MP_']),
             ck=FunctionParametersInputs.signalMapping()['CK'][values['_CK_']],
             cp=float(values['_CP_']),
-            ip=float(values['_IP_'])
         )
         oc = GC.config.outputConfig
         minRange, maxRange = values['_RANGE_'].split(',')
