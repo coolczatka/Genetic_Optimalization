@@ -62,33 +62,34 @@ class AckleyOptimizer:
         newPopulation = []
         n = len(self.population)
         eliteLen = 0
+        elite = []
         if GC.config.elitePercent > 0:
             elite = SelectionStrategy.getBest(self.population, GC.config.elitePercent)
             eliteLen = len(elite)
-            newPopulation = newPopulation + elite
+            #newPopulation = newPopulation + elite
         selected, weights = self.applySelection()
         temp = selected
-        while len(newPopulation) < n:
+        while len(newPopulation) < n - eliteLen:
             #print("\n selected: ", selected, weights, "\n eliteLen: ", eliteLen, "\n sellen: ", len(selected), "\nweights len", len(weights) )
             parent1 = random.choices(temp, weights)
             parent2 = random.choices(temp, weights)
             #print(parent2[0])
             child1, child2 = parent1[0].mating(parent2[0])
             newPopulation.append(child1)
-            if len(newPopulation) == n:
+            if len(newPopulation) == n - eliteLen:
                 break
             elif GC.config.chConfig.ck == 2: # krzyżowanie heurystyczne - tylko jeden potomek
                 continue
             else:
                 newPopulation.append(child2)
         #print(" ", eliteLen, " ", n )
-        for i in range(eliteLen, n):
+        for i in range(n - eliteLen):
             for j in range(len(newPopulation[i].genome)):
                 x = newPopulation[i].genome[j]
                 x = x.mutate()
                 #x = x.invert()
                 newPopulation[i].genome[j] = x
-
+        newPopulation = newPopulation + elite
         return newPopulation
 
     def runGenerations(self):
