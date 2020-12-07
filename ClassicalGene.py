@@ -22,7 +22,7 @@ class ClassicalGene(AbstractChromosome):
         return self.value
 
     def cross(self, chromB):
-        if(random() < GC.config.chConfig.cp):
+        if random() < GC.config.chConfig.cp:
             a = self.crossW(chromB)
             b = chromB.crossW(self)
             return a, b
@@ -31,10 +31,10 @@ class ClassicalGene(AbstractChromosome):
     def crossW(self, chromB):
         k = random()
         newGene = copy.deepcopy(self)
-        if GC.config.chConfig.mk == 1:
-            newGene.value = k * self.value + (1 - k) * chromB.value
-        elif GC.config.chConfig.mk == 2:
-            x1, x2 = sorted([self.value, chromB.value])
+        if GC.config.chConfig.ck == 1:
+            newGene.value = k * self.value + (1 - k) * chromB.value # Arytmetyczne
+        elif GC.config.chConfig.ck == 2:
+            x1, x2 = sorted([self.value, chromB.value]) # Heurystyczne
             newGene.value = k * (x2 - x1) + x1
         return newGene
 

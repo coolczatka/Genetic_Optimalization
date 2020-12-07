@@ -77,6 +77,8 @@ class AckleyOptimizer:
             newPopulation.append(child1)
             if len(newPopulation) == n:
                 break
+            elif GC.config.chConfig.ck == 2: # krzyżowanie heurystyczne - tylko jeden potomek
+                continue
             else:
                 newPopulation.append(child2)
         #print(" ", eliteLen, " ", n )
