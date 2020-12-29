@@ -5,8 +5,6 @@ import os
 
 global config
 global window
-# KLASYCZNY RZECZYWISTY
-global alghoritm
 
 if(os.path.exists('config.xml')):
     reader = XmlFileReader('config.xml')
@@ -16,4 +14,3 @@ else:
     cc = ChromosomeConfig()
     config = Config(100, cc)
 window = 1
-alghoritm = 1
