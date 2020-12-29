@@ -141,7 +141,7 @@ def drawPlots(data):
 
     plt.figure()
     plt.xlabel("Generation")
-    plt.ylabel("Best")
+    plt.ylabel("Std")
     plt.plot(data['stds'])
     plt.show()
 data = performFitness()
