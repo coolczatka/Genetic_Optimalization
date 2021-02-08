@@ -5,47 +5,51 @@ import random
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+from functions import SVCParameters, SVCParametersFitness, mutationSVC
+from functions import DecisionTreeParameters, DecisionTreeParametersFitness, mutationDecisionTree
+from functions import KNeighborsParameters, KNeighborsParametersFitness, mutationKNeighbors
+from functions import MLPParameters, MLPParametersFitness, mutationMLP
+from functions import NBParameters, NBParametersFitness, mutationNB
+
+import pandas as pd
+pd.set_option('display.max_columns', None)
+#df=pd.read_csv("data.csv",sep=',')
+df=pd.read_csv("glass.csv",sep=',')
+print(df.columns)
+#y=df['Status']
+y=df['Type']
+#df.drop('Status',axis=1,inplace=True)
+df.drop('Type',axis=1,inplace=True)
+#df.drop('ID',axis=1,inplace=True)
+df.drop('Id',axis=1,inplace=True)
+#df.drop('Recording',axis=1,inplace=True)
+numberOfAtributtes= len(df.columns)
 
 config = {
-    'a': 20,
-    'b': 0.2,
-    'c': 2*math.pi,
-    'kind': 'Min',#NIE TESTOWAC Min, Max
+    'kind': 'Max',#NIE TESTOWAC Min, Max
 
-    'selection': tools.selTournament, #TESTOWAC selTournament, selRandom, selBest, selWorst, selRoulette
+    'selection': tools.selTournament,
     'selectionParameters': {
         'tournsize': 3
     },
-    'mating': tools.cxTwoPoint, #TESTOWAC cxTwoPoint, cxOnePoint, cxUniform
+    'mating': tools.cxTwoPoint,
     'matingParameters': {
 
     },
-    'mutation': tools.mutGaussian, #TESTOWAC mutGaussian, mutShuffleIndexes, mutFlipBit
+    'mutation': mutationNB,
     'mutationParameters': {
         #Gaussian
-        'mu': 5,
-        'sigma': 20,
-        'indpb': 0.2
+        # 'mu': 5,
+        # 'sigma': 20,
+        # 'indpb': 0.2
     },
-    'sizePopulation': 100,
+    'sizePopulation': 50,
     'probabilityMutation': .2,
     'probabilityCrossover': .8,
-    'numberIteration': 100,
+    'numberIteration': 50,
 
     'range': (-10, 10)
 }
-
-
-def individual(icls):
-    genome = list()
-    genome.append(random.uniform(config['range'][0],config['range'][1]))
-    genome.append(random.uniform(config['range'][0],config['range'][1]))
-    return icls(genome)
-
-def fitnessFunction(individual):
-    X = np.array(individual)
-    return tuple([-config['a'] * math.exp(-config['b'] * math.sqrt(sum(X**2)/len(X)))\
-           -math.exp(sum([math.cos(config['c']*x) for x in X])/len(X)) + config['a'] + math.e])
 
 def performFitness():
     if config['kind'] == 'Min':
@@ -55,9 +59,9 @@ def performFitness():
         creator.create("FitnessMax", base.Fitness, weights=(1.0,))
         creator.create("Individual", list, fitness=creator.FitnessMax)
     toolbox = base.Toolbox()
-    toolbox.register('individual', individual, creator.Individual)
+    toolbox.register('individual', NBParameters, numberOfAtributtes, creator.Individual)
     toolbox.register('population', tools.initRepeat, list, toolbox.individual)
-    toolbox.register('evaluate', fitnessFunction)
+    toolbox.register('evaluate', NBParametersFitness,y,df,numberOfAtributtes)
     toolbox.register('select', config['selection'], **config['selectionParameters'])
     toolbox.register('mate', config['mating'], **config['matingParameters'])
     toolbox.register('mutate', config['mutation'], **config['mutationParameters'])
